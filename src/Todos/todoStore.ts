@@ -3,7 +3,7 @@ export interface iStateListItem {
   text: string;
   order: number;
   todos: iStateTodo[];
-  multiselect: number[];
+  todoMultiselect: number[];
 }
 export interface iStateTodo {
   id: number;
@@ -14,6 +14,7 @@ export interface iStateTodo {
 export interface iState {
   lists: iStateListItem[];
   listActive?: number;
+  listMultiselect?: number[];
 }
 export interface iStateAction {
   type: storeActions;
@@ -24,6 +25,8 @@ export enum storeActions {
   "listActive" = "listActive",
   "listCreate" = "listCreate",
   "listDelete" = "listDelete",
+  "listToggleMultiSelect" = "listToggleMultiSelect",
+  "listToggleMultiSelectAll" = "listToggleMultiSelectAll",
   "listUpdate" = "listUpdate",
   "todoCreate" = "todoCreate",
   "todoDelete" = "todoDelete",
@@ -36,7 +39,11 @@ let storeLocalStorage;
 if (localstorageData) {
   storeLocalStorage = JSON.parse(localstorageData) as iState;
 }
-export const storeDefault = { lists: [], listActive: 0 } as iState;
+export const storeDefault = {
+  lists: [],
+  listActive: 0,
+  listMultiselect: [],
+} as iState;
 export const storeState = storeLocalStorage || storeDefault;
 
 export const storeReducer = (state: iState, action: iStateAction) => {
@@ -58,7 +65,7 @@ export const storeReducer = (state: iState, action: iStateAction) => {
             id: listId,
             text: action.payload.text || `list ${listId}`,
             todos: [],
-            multiselect: [],
+            todoMultiselect: [],
             order: listsFiltered.length,
           },
         ],
@@ -89,19 +96,47 @@ export const storeReducer = (state: iState, action: iStateAction) => {
       const lists = [...state.lists];
       const listId = action.payload.id;
       const listActive = state.listActive === listId ? 0 : state.listActive;
+
+      // remove from multiselect
+      const listMultiselectCurrent = state?.listMultiselect || [];
+
       return {
+        ...state,
         listActive,
         lists: lists
           .filter(({ id }) => id !== listId)
           .sort((first, second) => {
             return first.order - second.order;
           }),
+        listMultiselect: listMultiselectCurrent.filter((id) => id !== listId),
       };
     }
     case storeActions.listActive: {
       return {
         ...state,
         listActive: action.payload.id,
+      };
+    }
+    case storeActions.listToggleMultiSelect: {
+      const listId = action.payload.id;
+      const listMultiselectCurrent = state?.listMultiselect || [];
+      const listMultiselect = listMultiselectCurrent.includes(listId)
+        ? listMultiselectCurrent.filter((id) => id !== listId)
+        : [...listMultiselectCurrent, listId];
+      return {
+        ...state,
+        listMultiselect,
+      };
+    }
+    case storeActions.listToggleMultiSelectAll: {
+      const listMultiselectCount = (state?.listMultiselect || []).length;
+      const listMultiselect =
+        listMultiselectCount === state.lists.length
+          ? []
+          : state.lists.map(({ id }) => id);
+      return {
+        ...state,
+        listMultiselect,
       };
     }
     // ------------------

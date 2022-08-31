@@ -20,6 +20,7 @@ export const TodoListHeaderTitle = styled.h2`
   margin: 0;
   font-size: 1.6rem;
   font-weight: 100;
+  margin-bottom: 1.3rem;
 `;
 
 // ======================================

@@ -37,18 +37,77 @@ export const TodoListsNewListButton = styled.button`
 // ======================================
 // Display lists
 // ----------------------------------
-export const TodoListsListCollectionGroup = styled.div`
+export const TodoListsListGroup = styled.div`
   margin-bottom: 3rem;
 `;
 export const TodoListsListCollection = styled.ul`
   margin: 0;
   padding: 0;
 `;
-export const TodoListsListCollectionTitle = styled.h2`
-  font-size: 0.9rem;
-  font-weight: 100;
+
+export const TodoListsHeadingGroup = styled.div`
+  display: flex;
   margin: 0 0 0.3rem;
 `;
+
+export const TodoListsTitle = styled.h2`
+  font-size: 0.9rem;
+  font-weight: 100;
+  margin: 0;
+  padding: 0.6rem;
+
+  flex: 1;
+`;
+
+export const TodoListsMultiselectSelectAllButton = styled.button`
+  transition: color 190ms, background-color 240ms;
+
+  color: hsl(48deg 84% 17%);
+  background-color: #fff;
+  border: 2px solid hsl(47deg 100% 73% / 33%);
+
+  border-radius: 0.6rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 0.6rem;
+
+  &:focus,
+  &:hover {
+    background-color: hsl(48deg 100% 81%);
+    color: hsl(48deg 70% 21%);
+    border-color: hsl(47deg 100% 73%);
+  }
+`;
+
+export const TodoListsMultiselectDeleteButton = styled.button`
+  transition: color 190ms, background-color 240ms;
+  background-color: hsl(0deg 100% 50% / 14%);
+  color: hsl(0deg 82% 19%);
+
+  box-shadow: 0px 10px 40px 0px rgb(133 168 194 / 10%);
+  border-radius: 0.6rem;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 0.6rem;
+  margin-left: 0.3rem;
+  flex: 1;
+  &:focus,
+  &:hover {
+    background-color: hsl(0deg 100% 50% / 24%);
+    color: hsl(0deg 82% 19%);
+  }
+`;
+
+export const TodoListsMultiselectActionGroup = styled.div`
+  padding: 0;
+  display: flex;
+  justify-content: flex-end;
+  ${TodoListsMultiselectSelectAllButton} {
+    margin-left: 0.3rem;
+  }
+`;
+
 export const TodoListsListCollectionEmpty = styled.h3`
   margin: 0;
   padding: 1rem;
@@ -58,7 +117,7 @@ export const TodoListsListCollectionEmpty = styled.h3`
 // ======================================
 // List
 // ----------------------------------
-export const TodoListsList = styled.li`
+export const TodoListsListItem = styled.li`
   border-radius: 0.75rem;
   display: flex;
   list-style-type: none;
@@ -111,8 +170,12 @@ export const TodoListsListMultiSelectButton = styled.button`
 
   &:focus,
   &:hover {
-    background-color: hsl(190deg 100% 50% / 20%);
-    color: hsl(190deg 82% 19%);
+    background-color: hsl(48deg 100% 81%);
+    color: hsl(48deg 70% 21%);
+  }
+  &.selected {
+    background-color: hsl(47deg 100% 73%);
+    color: hsl(48deg 84% 17%);
   }
 `;
 export const TodoListsListDeleteButton = styled.button`
