@@ -107,17 +107,6 @@ export const storeReducer = (state: iState, action: iStateAction) => {
     // ------------------
     // Todos
     // ------------------
-    // case storeActions.todoCreate: {
-    //   const lists = [...state.lists];
-    //   const listId = action.payload.listId;
-    //   const indexListToEdit = lists.findIndex(({ id }) => id === listId);
-    //   const listToEdit = lists[indexListToEdit];
-    //   const todosFiltered = listToEdit.todos.filter(({ id }) => {
-    //     return id !== action.payload.id;
-    //   });
-    //   listToEdit.todos = [...todosFiltered, action.payload];
-    //   return { lists };
-    // }
     case storeActions.todoCreate: {
       const lists = [...state.lists];
       const listId = action.payload.listId;
