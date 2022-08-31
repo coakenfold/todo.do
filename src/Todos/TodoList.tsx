@@ -1,16 +1,16 @@
 import { useState, useContext } from "react";
 import { storeActions, iStateListItem } from "./todoStore";
-import { StateContext } from "./Todo";
-import { TodoItem } from "./TodoItem";
+import { StateContext } from "./Todos";
+import { Todo } from "./Todo";
 import {
-  TodoListContainer,
-  TodoListTitleContainer,
-  TodoListTitleHeading,
-  TodoListTitleText,
-  TodoListTodosContainer,
-  TodoListItemCreateContainer,
-  TodoListItemCreateInput,
-  TodoListItemCreateButton,
+  TodoListGroup,
+  TodoListHeaderGroup,
+  TodoListHeaderHeading,
+  TodoListHeaderTitle,
+  TodoListTodosList,
+  TodoListNewTodoGroup,
+  TodoListNewTodoInput,
+  TodoListNewTodoButton,
 } from "./TodoList.styled";
 
 export interface iTodoListItem {
@@ -53,14 +53,14 @@ export const TodoList = ({ list }: iTodoListProps) => {
   //   });
   // };
   return (
-    <TodoListContainer>
-      <TodoListTitleContainer>
-        <TodoListTitleHeading>Todo.List</TodoListTitleHeading>
-        <TodoListTitleText>{list.text}</TodoListTitleText>
-      </TodoListTitleContainer>
+    <TodoListGroup>
+      <TodoListHeaderGroup>
+        <TodoListHeaderHeading>Todo.List</TodoListHeaderHeading>
+        <TodoListHeaderTitle>{list.text}</TodoListHeaderTitle>
+      </TodoListHeaderGroup>
 
-      <TodoListItemCreateContainer>
-        <TodoListItemCreateInput
+      <TodoListNewTodoGroup>
+        <TodoListNewTodoInput
           type="text"
           placeholder="New todo item"
           onChange={(event) => {
@@ -68,7 +68,7 @@ export const TodoList = ({ list }: iTodoListProps) => {
           }}
           value={textTodo}
         />
-        <TodoListItemCreateButton
+        <TodoListNewTodoButton
           onClick={(event) => {
             event.preventDefault();
             onClickAddItem();
@@ -76,14 +76,14 @@ export const TodoList = ({ list }: iTodoListProps) => {
           disabled={textTodo === ""}
         >
           {"Add Todo " + (list.todos.length + 1)}
-        </TodoListItemCreateButton>
-      </TodoListItemCreateContainer>
+        </TodoListNewTodoButton>
+      </TodoListNewTodoGroup>
 
-      <TodoListTodosContainer>
+      <TodoListTodosList>
         {list.todos.map((todo) => (
-          <TodoItem key={todo.id} todo={todo} listId={list.id} />
+          <Todo key={todo.id} todo={todo} listId={list.id} />
         ))}
-      </TodoListTodosContainer>
-    </TodoListContainer>
+      </TodoListTodosList>
+    </TodoListGroup>
   );
 };

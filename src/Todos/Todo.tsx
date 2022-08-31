@@ -1,19 +1,14 @@
 import { useEffect, useRef, useContext } from "react";
-import { iStateTodoItem, storeActions } from "./todoStore";
-import { StateContext } from "./Todo";
-import {
-  TodoItemContainer,
-  TodoItemName,
-  TodoItemActions,
-  TodoItemDelete,
-} from "./TodoItem.styled";
+import { iStateTodo, storeActions } from "./todoStore";
+import { StateContext } from "./Todos";
+import { TodoGroup, TodoName, TodoActions, TodoDelete } from "./Todo.styled";
 
 const HIGHLIGHT_TIME = 2000;
-export interface iTodoItemProps {
-  todo: iStateTodoItem;
+export interface iTodoProps {
+  todo: iStateTodo;
   listId: number;
 }
-export const TodoItem = ({ todo, listId }: iTodoItemProps) => {
+export const Todo = ({ todo, listId }: iTodoProps) => {
   const { dispatch } = useContext(StateContext);
   const onChangeCompleteStatus = () => {
     dispatch?.({
@@ -36,19 +31,19 @@ export const TodoItem = ({ todo, listId }: iTodoItemProps) => {
   };
 
   // Highlight on add
-  const refTodoItemContainer = useRef<HTMLLIElement>(null);
+  const refTodoGroup = useRef<HTMLLIElement>(null);
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
     // NOTE: `todo.id` is a timestamp
     const highlightUntil = todo.id + HIGHLIGHT_TIME;
-    if (refTodoItemContainer?.current && Date.now() < highlightUntil) {
+    if (refTodoGroup?.current && Date.now() < highlightUntil) {
       const highlightTimeout = highlightUntil - Date.now();
 
-      refTodoItemContainer.current.classList.add("highlight");
+      refTodoGroup.current.classList.add("highlight");
 
       timeoutId = setTimeout(() => {
-        if (refTodoItemContainer?.current) {
-          refTodoItemContainer.current.classList.remove("highlight");
+        if (refTodoGroup?.current) {
+          refTodoGroup.current.classList.remove("highlight");
         }
       }, highlightTimeout);
     }
@@ -58,9 +53,9 @@ export const TodoItem = ({ todo, listId }: iTodoItemProps) => {
         clearTimeout(timeoutId);
       }
     };
-  }, [refTodoItemContainer, todo.id]);
+  }, [refTodoGroup, todo.id]);
 
-  const onBlurTodoItemName = ({
+  const onBlurTodoName = ({
     target,
     text,
   }: {
@@ -72,7 +67,7 @@ export const TodoItem = ({ todo, listId }: iTodoItemProps) => {
       target.value = text;
     }
   };
-  const onKeyDownTodoItemName = ({
+  const onKeyDownTodoName = ({
     code,
     currentTarget,
     text,
@@ -111,7 +106,7 @@ export const TodoItem = ({ todo, listId }: iTodoItemProps) => {
 
   var itemClass = `form-check todoitem ${todo.isDone ? "done" : "undone"}`;
   return (
-    <TodoItemContainer className={itemClass} ref={refTodoItemContainer}>
+    <TodoGroup className={itemClass} ref={refTodoGroup}>
       <input
         name="multiselect"
         type="checkbox"
@@ -128,13 +123,13 @@ export const TodoItem = ({ todo, listId }: iTodoItemProps) => {
         defaultChecked={todo.isDone}
       />
 
-      <TodoItemName
+      <TodoName
         contentEditable="false"
         onBlur={({ target }) => {
-          onBlurTodoItemName({ target, text: todo.text });
+          onBlurTodoName({ target, text: todo.text });
         }}
         onKeyDown={({ code, currentTarget }) => {
-          onKeyDownTodoItemName({
+          onKeyDownTodoName({
             code,
             currentTarget,
             text: todo.text,
@@ -144,9 +139,9 @@ export const TodoItem = ({ todo, listId }: iTodoItemProps) => {
         defaultValue={todo.text}
         disabled={todo.isDone}
       />
-      <TodoItemActions>
-        <TodoItemDelete onClick={onClickDeleteItem}>Delete</TodoItemDelete>
-      </TodoItemActions>
-    </TodoItemContainer>
+      <TodoActions>
+        <TodoDelete onClick={onClickDeleteItem}>Delete</TodoDelete>
+      </TodoActions>
+    </TodoGroup>
   );
 };

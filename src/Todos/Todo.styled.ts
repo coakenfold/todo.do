@@ -1,5 +1,5 @@
 import styled from "styled-components";
-export const TodoItemName = styled.input`
+export const TodoName = styled.input`
   background-color: transparent;
   border: none;
   flex: 1;
@@ -9,19 +9,18 @@ export const TodoItemName = styled.input`
   &:focus {
   }
 `;
-export const TodoItemContainer = styled.li`
+export const TodoGroup = styled.li`
   border-radius: 0.75rem;
   display: flex;
   list-style-type: none;
   padding: 0 0.6rem;
-  background-color: rgb(252 176 69 / 0);
   transition: background-color 190ms;
   &:hover {
-    background-color: rgb(252 176 69 / 30%);
+    background-color: rgb(91 155 200 / 6%);
   }
 
   &.done {
-    ${TodoItemName} {
+    ${TodoName} {
       text-decoration: line-through;
       cursor: not-allowed;
     }
@@ -31,11 +30,11 @@ export const TodoItemContainer = styled.li`
     background-color: rgb(252 176 69 / 50%);
   }
 `;
-export const TodoItemActions = styled.div`
+export const TodoActions = styled.div`
   padding: 0.6rem 0 0.6rem 0.6rem;
   display: flex;
 `;
-export const TodoItemDelete = styled.button`
+export const TodoDelete = styled.button`
   background-color: #fff;
   box-shadow: 0px 10px 40px 0px rgb(133 168 194 / 10%);
   border-radius: 0.6rem;
@@ -44,8 +43,8 @@ export const TodoItemDelete = styled.button`
   font-size: 1.2rem;
   padding: 1rem;
   flex: 1;
-  &:focus {
-  }
+  &:focus,
   &:hover {
+    background-color: hsl(190deg 100% 50% / 20%);
   }
 `;

@@ -2,10 +2,10 @@ export interface iStateListItem {
   id: number;
   text: string;
   order: number;
-  todos: iStateTodoItem[];
+  todos: iStateTodo[];
   multiselect: number[];
 }
-export interface iStateTodoItem {
+export interface iStateTodo {
   id: number;
   text: string;
   order: number;

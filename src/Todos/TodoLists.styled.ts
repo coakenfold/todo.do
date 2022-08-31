@@ -1,32 +1,16 @@
 import styled from "styled-components";
 
-export const TodoRoot = styled.div`
-  font-family: sans-serif;
-  background-color: #fff;
-  border-radius: 1rem;
-  padding: 1rem;
-  margin: 0 auto;
-  box-shadow: 0px 10px 40px 0px rgb(76 70 124 / 50%);
-  min-width: 33rem;
-  max-width: 66rem;
-`;
-
-export const TodoTitle = styled.h1`
-  font-weight: 100;
-  margin: 1rem 0 1rem;
-`;
-
 // ======================================
-// ListCreate
+// Create list
 // ----------------------------------
-export const ListCreateContainer = styled.form`
+export const TodoListsNewListGroup = styled.form`
   box-shadow: 0px 10px 40px 0px rgb(133 168 194 / 20%);
   border-radius: 1rem;
   display: flex;
   padding: 1rem;
   margin-bottom: 3rem;
 `;
-export const ListCreateInput = styled.input`
+export const TodoListsNewListInput = styled.input`
   background: transparent;
   border: none;
   flex: 1;
@@ -35,9 +19,10 @@ export const ListCreateInput = styled.input`
   margin-right: 0.3rem;
   padding: 0;
 `;
-export const ListCreateButton = styled.button`
+export const TodoListsNewListButton = styled.button`
   transition: background-color 190ms;
   background-color: hsl(190deg 32% 84% / 20%);
+  &:focus,
   &:hover {
     background-color: hsl(190deg 100% 50% / 20%);
   }
@@ -50,21 +35,21 @@ export const ListCreateButton = styled.button`
 `;
 
 // ======================================
-// Lists
+// Display lists
 // ----------------------------------
-export const ListsContainer = styled.div`
+export const TodoListsListCollectionGroup = styled.div`
   margin-bottom: 3rem;
 `;
-export const ListsTitle = styled.h2`
-  font-weight: 100;
-  font-size: 1rem;
-  margin: 0;
-`;
-export const Lists = styled.ul`
+export const TodoListsListCollection = styled.ul`
   margin: 0;
   padding: 0;
 `;
-export const ListsNoLists = styled.h3`
+export const TodoListsListCollectionTitle = styled.h2`
+  font-size: 0.9rem;
+  font-weight: 100;
+  margin: 0 0 0.3rem;
+`;
+export const TodoListsListCollectionEmpty = styled.h3`
   margin: 0;
   padding: 1rem;
   font-weight: 100;
@@ -73,18 +58,17 @@ export const ListsNoLists = styled.h3`
 // ======================================
 // List
 // ----------------------------------
-export const List = styled.li`
+export const TodoListsList = styled.li`
   border-radius: 0.75rem;
-  transition: background-color 190ms;
   display: flex;
   list-style-type: none;
   padding: 0 0.6rem;
+  transition: background-color 190ms;
   &:hover {
     background-color: rgb(91 155 200 / 6%);
   }
 `;
-export const ListBulkSelect = styled.input``;
-export const ListName = styled.input`
+export const TodoListsListName = styled.input`
   background-color: transparent;
   border: none;
   flex: 1;
@@ -94,12 +78,12 @@ export const ListName = styled.input`
   &:focus {
   }
 `;
-export const ListActions = styled.div`
+export const TodoListsListActionsGroup = styled.div`
   padding: 0.6rem 0 0.6rem 0.6rem;
   display: flex;
 `;
-
-export const ListDetails = styled.button`
+export const TodoListsListBulkEditSelect = styled.input``;
+export const TodoListsListDetailsButton = styled.button`
   background-color: #fff;
   box-shadow: 0px 10px 40px 0px rgb(133 168 194 / 10%);
   border-radius: 0.6rem;
@@ -108,12 +92,12 @@ export const ListDetails = styled.button`
   font-size: 1.2rem;
   padding: 1rem;
   flex: 1;
-  &:focus {
-  }
+  &:focus,
   &:hover {
+    background-color: hsl(190deg 100% 50% / 20%);
   }
 `;
-export const ListDelete = styled.button`
+export const TodoListsListDeleteButton = styled.button`
   background-color: #fff;
   box-shadow: 0px 10px 40px 0px rgb(133 168 194 / 10%);
   border-radius: 0.6rem;
@@ -123,10 +107,8 @@ export const ListDelete = styled.button`
   padding: 1rem;
   margin-left: 0.6rem;
 
-  &:focus {
-    box-shadow: 0px 10px 40px 0px rgb(133 168 194 / 10%);
-  }
+  &:focus,
   &:hover {
-    box-shadow: 0px 10px 40px 0px rgb(133 168 194 / 10%);
+    background-color: hsl(190deg 100% 50% / 20%);
   }
 `;
