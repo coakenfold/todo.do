@@ -1,14 +1,10 @@
-import { useEffect, useState, useReducer } from "react";
-import {
-  storeReducer,
-  storeState,
-  storeActions,
-  LOCALSTORAGE,
-} from "./todoStore";
+import { useState, useContext } from "react";
+import { storeActions } from "./todoStore";
+import { StateContext } from "./TodosProvider";
 import {
   TodoListsList,
   TodoListsListActionsGroup,
-  TodoListsListBulkEditSelect,
+  TodoListsListMultiSelectButton,
   TodoListsListCollection,
   TodoListsListCollectionEmpty,
   TodoListsListCollectionGroup,
@@ -21,24 +17,15 @@ import {
   TodoListsNewListInput,
 } from "./TodoLists.styled";
 
-export const TodoLists = ({
-  onClickListView,
-}: {
-  onClickListView: (id: number) => void;
-}) => {
-  const [state, dispatch] = useReducer(storeReducer, storeState);
+export const TodoLists = () => {
+  const { state, dispatch } = useContext(StateContext);
   const [listCreateText, setListCreateText] = useState("");
-
-  useEffect(() => {
-    localStorage.setItem(LOCALSTORAGE, JSON.stringify(state));
-    return () => {};
-  }, [state]);
 
   const onChangeListText = (value: string) => {
     setListCreateText(value);
   };
   const onClickCreateList = () => {
-    dispatch({
+    dispatch?.({
       type: storeActions.listCreate,
       payload: { text: listCreateText },
     });
@@ -69,7 +56,7 @@ export const TodoLists = ({
     const textCurrent = currentTarget.value;
     if (code === "Enter" || code === "NumpadEnter") {
       if (textCurrent !== "" && textCurrent !== text) {
-        dispatch({
+        dispatch?.({
           type: storeActions.listUpdate,
           payload: { text: textCurrent, id },
         });
@@ -85,14 +72,18 @@ export const TodoLists = ({
     }
   };
   const onClickListDelete = (id: number) => {
-    dispatch({
+    dispatch?.({
       type: storeActions.listDelete,
       payload: { id },
     });
   };
   const _onClickListView = (id: number) => {
-    onClickListView(id);
+    dispatch?.({
+      type: storeActions.listActive,
+      payload: { id },
+    });
   };
+  const onClickToggleMultiSelect = () => {};
 
   return (
     <>
@@ -105,7 +96,12 @@ export const TodoLists = ({
           }}
           value={listCreateText}
         />
-        <TodoListsNewListButton onClick={onClickCreateList}>
+        <TodoListsNewListButton
+          onClick={(e) => {
+            e.preventDefault();
+            onClickCreateList();
+          }}
+        >
           Create List
         </TodoListsNewListButton>
       </TodoListsNewListGroup>
@@ -116,10 +112,19 @@ export const TodoLists = ({
           <TodoListsListCollectionEmpty>No lists</TodoListsListCollectionEmpty>
         ) : (
           <TodoListsListCollection>
-            {state.lists.map(({ id, text, todos }) => {
+            {state.lists.map(({ id, text }) => {
               return (
                 <TodoListsList key={id}>
-                  <TodoListsListBulkEditSelect type="checkbox" />
+                  <TodoListsListActionsGroup>
+                    <TodoListsListDetailsButton
+                      className={id === state.listActive ? "active" : ""}
+                      onClick={() => {
+                        _onClickListView(id);
+                      }}
+                    >
+                      {id === state.listActive ? "Viewing" : "View"}
+                    </TodoListsListDetailsButton>
+                  </TodoListsListActionsGroup>
                   <TodoListsListName
                     contentEditable="false"
                     onBlur={({ target }) => {
@@ -131,13 +136,11 @@ export const TodoLists = ({
                     defaultValue={text}
                   />
                   <TodoListsListActionsGroup>
-                    <TodoListsListDetailsButton
-                      onClick={() => {
-                        _onClickListView(id);
-                      }}
+                    <TodoListsListMultiSelectButton
+                      onClick={onClickToggleMultiSelect}
                     >
-                      View
-                    </TodoListsListDetailsButton>
+                      Select
+                    </TodoListsListMultiSelectButton>
                     <TodoListsListDeleteButton
                       onClick={() => {
                         onClickListDelete(id);

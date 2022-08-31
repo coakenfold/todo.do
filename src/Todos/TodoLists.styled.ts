@@ -75,16 +75,50 @@ export const TodoListsListName = styled.input`
   font-size: 1.3rem;
   font-weight: 100;
   padding: 1rem;
+  margin: 0 0.3rem;
   &:focus {
   }
 `;
-export const TodoListsListActionsGroup = styled.div`
-  padding: 0.6rem 0 0.6rem 0.6rem;
-  display: flex;
-`;
-export const TodoListsListBulkEditSelect = styled.input``;
+
+// List Actions
 export const TodoListsListDetailsButton = styled.button`
   background-color: #fff;
+  box-shadow: 0px 10px 40px 0px rgb(133 168 194 / 10%);
+  border-radius: 0.6rem;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  padding: 1rem;
+  &:focus,
+  &:hover {
+    background-color: hsl(190deg 100% 50% / 20%);
+  }
+  &.active {
+    background-color: hsl(190deg 100% 50% / 10%);
+  }
+`;
+export const TodoListsListMultiSelectButton = styled.button`
+  transition: color 190ms, background-color 240ms;
+  background-color: #fff;
+
+  box-shadow: 0px 10px 40px 0px rgb(133 168 194 / 10%);
+  border-radius: 0.6rem;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  padding: 1rem;
+  flex: 1;
+
+  &:focus,
+  &:hover {
+    background-color: hsl(190deg 100% 50% / 20%);
+    color: hsl(190deg 82% 19%);
+  }
+`;
+export const TodoListsListDeleteButton = styled.button`
+  transition: color 190ms, background-color 240ms;
+  background-color: #fff;
+
   box-shadow: 0px 10px 40px 0px rgb(133 168 194 / 10%);
   border-radius: 0.6rem;
   border: none;
@@ -94,21 +128,15 @@ export const TodoListsListDetailsButton = styled.button`
   flex: 1;
   &:focus,
   &:hover {
-    background-color: hsl(190deg 100% 50% / 20%);
+    background-color: hsl(0deg 100% 50% / 24%);
+    color: hsl(0deg 82% 19%);
   }
 `;
-export const TodoListsListDeleteButton = styled.button`
-  background-color: #fff;
-  box-shadow: 0px 10px 40px 0px rgb(133 168 194 / 10%);
-  border-radius: 0.6rem;
-  border: none;
-  cursor: pointer;
-  font-size: 1.2rem;
-  padding: 1rem;
-  margin-left: 0.6rem;
 
-  &:focus,
-  &:hover {
-    background-color: hsl(190deg 100% 50% / 20%);
+export const TodoListsListActionsGroup = styled.div`
+  padding: 0.6rem 0;
+  display: flex;
+  ${TodoListsListDeleteButton} {
+    margin-left: 0.9rem;
   }
 `;

@@ -1,7 +1,13 @@
 import { useEffect, useRef, useContext } from "react";
 import { iStateTodo, storeActions } from "./todoStore";
-import { StateContext } from "./Todos";
-import { TodoGroup, TodoName, TodoActions, TodoDelete } from "./Todo.styled";
+import { StateContext } from "./TodosProvider";
+import {
+  TodoGroup,
+  TodoName,
+  TodoActionsGroup,
+  TodoDeleteButton,
+  TodoMultiSelectButton,
+} from "./Todo.styled";
 
 const HIGHLIGHT_TIME = 2000;
 export interface iTodoProps {
@@ -10,27 +16,8 @@ export interface iTodoProps {
 }
 export const Todo = ({ todo, listId }: iTodoProps) => {
   const { dispatch } = useContext(StateContext);
-  const onChangeCompleteStatus = () => {
-    dispatch?.({
-      type: storeActions.todoUpdate,
-      payload: {
-        listId: listId,
-        id: todo.id,
-        isDone: !todo.isDone,
-      },
-    });
-  };
-  const onClickDeleteItem = () => {
-    dispatch?.({
-      type: storeActions.todoDelete,
-      payload: {
-        listId: listId,
-        id: todo.id,
-      },
-    });
-  };
 
-  // Highlight on add
+  // Highlight on todo creation
   const refTodoGroup = useRef<HTMLLIElement>(null);
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
@@ -55,6 +42,18 @@ export const Todo = ({ todo, listId }: iTodoProps) => {
     };
   }, [refTodoGroup, todo.id]);
 
+  // Events
+  const onChangeCompleteStatus = () => {
+    dispatch?.({
+      type: storeActions.todoUpdate,
+      payload: {
+        listId: listId,
+        id: todo.id,
+        isDone: !todo.isDone,
+      },
+    });
+  };
+
   const onBlurTodoName = ({
     target,
     text,
@@ -67,6 +66,7 @@ export const Todo = ({ todo, listId }: iTodoProps) => {
       target.value = text;
     }
   };
+
   const onKeyDownTodoName = ({
     code,
     currentTarget,
@@ -100,22 +100,24 @@ export const Todo = ({ todo, listId }: iTodoProps) => {
       }
     }
   };
-  const onChangeCheckboxMultiSelect = (isChecked: boolean) => {
+
+  const onClickToggleMultiSelect = () => {
     // onClickMultiSelectItem({ id, isChecked });
+  };
+
+  const onClickDeleteItem = () => {
+    dispatch?.({
+      type: storeActions.todoDelete,
+      payload: {
+        listId: listId,
+        id: todo.id,
+      },
+    });
   };
 
   var itemClass = `form-check todoitem ${todo.isDone ? "done" : "undone"}`;
   return (
     <TodoGroup className={itemClass} ref={refTodoGroup}>
-      <input
-        name="multiselect"
-        type="checkbox"
-        aria-label={`Add todo to bulk editing`}
-        onChange={(e) => {
-          onChangeCheckboxMultiSelect(e.target.checked);
-        }}
-      />
-
       <input
         type="checkbox"
         className="form-check-input"
@@ -139,9 +141,12 @@ export const Todo = ({ todo, listId }: iTodoProps) => {
         defaultValue={todo.text}
         disabled={todo.isDone}
       />
-      <TodoActions>
-        <TodoDelete onClick={onClickDeleteItem}>Delete</TodoDelete>
-      </TodoActions>
+      <TodoActionsGroup>
+        <TodoMultiSelectButton onClick={onClickToggleMultiSelect}>
+          Select
+        </TodoMultiSelectButton>
+        <TodoDeleteButton onClick={onClickDeleteItem}>Delete</TodoDeleteButton>
+      </TodoActionsGroup>
     </TodoGroup>
   );
 };

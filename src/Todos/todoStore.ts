@@ -13,6 +13,7 @@ export interface iStateTodo {
 }
 export interface iState {
   lists: iStateListItem[];
+  listActive?: number;
 }
 export interface iStateAction {
   type: storeActions;
@@ -20,23 +21,24 @@ export interface iStateAction {
 }
 
 export enum storeActions {
-  "todoCreate" = "todoCreate",
-  "todoUpdate" = "todoUpdate",
-  "todoDelete" = "todoDelete",
-  "listUpdate" = "listUpdate",
+  "listActive" = "listActive",
   "listCreate" = "listCreate",
   "listDelete" = "listDelete",
+  "listUpdate" = "listUpdate",
+  "todoCreate" = "todoCreate",
+  "todoDelete" = "todoDelete",
+  "todoUpdate" = "todoUpdate",
 }
-/*
-lists: [{
-  id: 1,
-  text: 'list 1',
-  todos: [
-    {id: 1, text: 'item 1', isDone: true},
-  ]
-  multiselect: [2,3]
-}]
-*/
+
+export const LOCALSTORAGE = "oakenfold.app:todos";
+const localstorageData = localStorage.getItem(LOCALSTORAGE);
+let storeLocalStorage;
+if (localstorageData) {
+  storeLocalStorage = JSON.parse(localstorageData) as iState;
+}
+export const storeDefault = { lists: [], listActive: 0 } as iState;
+export const storeState = storeLocalStorage || storeDefault;
+
 export const storeReducer = (state: iState, action: iStateAction) => {
   switch (action.type) {
     // ------------------
@@ -60,6 +62,7 @@ export const storeReducer = (state: iState, action: iStateAction) => {
             order: listsFiltered.length,
           },
         ],
+        listActive: listId,
       };
     }
     case storeActions.listUpdate: {
@@ -85,13 +88,20 @@ export const storeReducer = (state: iState, action: iStateAction) => {
     case storeActions.listDelete: {
       const lists = [...state.lists];
       const listId = action.payload.id;
+      const listActive = state.listActive === listId ? 0 : state.listActive;
       return {
-        ...state,
+        listActive,
         lists: lists
           .filter(({ id }) => id !== listId)
           .sort((first, second) => {
             return first.order - second.order;
           }),
+      };
+    }
+    case storeActions.listActive: {
+      return {
+        ...state,
+        listActive: action.payload.id,
       };
     }
     // ------------------
@@ -109,7 +119,6 @@ export const storeReducer = (state: iState, action: iStateAction) => {
     //   return { lists };
     // }
     case storeActions.todoCreate: {
-      console.log("todoCreate!");
       const lists = [...state.lists];
       const listId = action.payload.listId;
       const indexListToEdit = lists.findIndex(({ id }) => id === listId);
@@ -124,7 +133,7 @@ export const storeReducer = (state: iState, action: iStateAction) => {
           order: listToEdit.todos.length + 1,
         },
       ];
-      return { lists };
+      return { ...state, lists };
     }
     case storeActions.todoUpdate: {
       const lists = [...state.lists];
@@ -145,11 +154,10 @@ export const storeReducer = (state: iState, action: iStateAction) => {
       };
       listToEdit.todos = [...todosFiltered, todoEdited].sort(
         (first, second) => {
-          console.log(first, second);
           return first.order - second.order;
         }
       );
-      return { lists };
+      return { ...state, lists };
     }
     case storeActions.todoDelete: {
       const lists = [...state.lists];
@@ -168,7 +176,7 @@ export const storeReducer = (state: iState, action: iStateAction) => {
         });
       listToEdit.todos = todosFiltered;
 
-      return { lists };
+      return { ...state, lists };
     }
     // ------------------
     // Default
@@ -178,13 +186,3 @@ export const storeReducer = (state: iState, action: iStateAction) => {
       return state;
   }
 };
-
-export const LOCALSTORAGE = "oakenfold.app:todos";
-const localstorageData = localStorage.getItem(LOCALSTORAGE);
-let storeLocalStorage;
-if (localstorageData) {
-  storeLocalStorage = JSON.parse(localstorageData);
-}
-
-export const storeDefault = { lists: [] };
-export const storeState: iState = storeLocalStorage || storeDefault;

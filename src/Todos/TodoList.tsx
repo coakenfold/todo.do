@@ -1,6 +1,6 @@
 import { useState, useContext } from "react";
 import { storeActions, iStateListItem } from "./todoStore";
-import { StateContext } from "./Todos";
+import { StateContext } from "./TodosProvider";
 import { Todo } from "./Todo";
 import {
   TodoListGroup,
@@ -22,17 +22,20 @@ export interface iTodoListItem {
 export interface iTodoListProps {
   list: iStateListItem;
 }
-export const TodoList = ({ list }: iTodoListProps) => {
-  const { dispatch } = useContext(StateContext);
+export const TodoList = ({ listId }: { listId: number }) => {
+  const { state, dispatch } = useContext(StateContext);
   const [textTodo, setTextTodo] = useState("");
   const onChangeText = (value: string) => {
     setTextTodo(value);
   };
+
+  const list = state.lists.find(({ id }) => id === listId);
+
   const onClickAddItem = () => {
     dispatch?.({
       type: storeActions.todoCreate,
       payload: {
-        listId: list.id,
+        listId: list?.id,
         id: Date.now(),
         isDone: false,
         text: textTodo,
@@ -56,7 +59,7 @@ export const TodoList = ({ list }: iTodoListProps) => {
     <TodoListGroup>
       <TodoListHeaderGroup>
         <TodoListHeaderHeading>Todo.List</TodoListHeaderHeading>
-        <TodoListHeaderTitle>{list.text}</TodoListHeaderTitle>
+        <TodoListHeaderTitle>{list?.text}</TodoListHeaderTitle>
       </TodoListHeaderGroup>
 
       <TodoListNewTodoGroup>
@@ -75,12 +78,12 @@ export const TodoList = ({ list }: iTodoListProps) => {
           }}
           disabled={textTodo === ""}
         >
-          {"Add Todo " + (list.todos.length + 1)}
+          {"Add Todo " + ((list?.todos.length || 0) + 1)}
         </TodoListNewTodoButton>
       </TodoListNewTodoGroup>
 
       <TodoListTodosList>
-        {list.todos.map((todo) => (
+        {list?.todos.map((todo) => (
           <Todo key={todo.id} todo={todo} listId={list.id} />
         ))}
       </TodoListTodosList>
