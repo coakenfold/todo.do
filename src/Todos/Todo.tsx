@@ -116,17 +116,14 @@ export const Todo = ({ todo, idList }: iTodoProps) => {
   };
 
   const isSelected = state.multiselectTodos?.includes(todo.id);
-  var itemClass = `form-check todoitem ${todo.isDone ? "done" : "undone"}`;
   return (
-    <TodoGroup className={itemClass} ref={refTodoGroup}>
+    <TodoGroup className={todo.isDone ? "done" : "undone"} ref={refTodoGroup}>
       <input
         type="checkbox"
-        className="form-check-input"
         onChange={onChangeCompleteStatus}
         defaultChecked={todo.isDone}
         checked={todo.isDone}
       />
-
       <TodoName
         contentEditable="false"
         onBlur={({ target }) => {
