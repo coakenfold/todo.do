@@ -3,7 +3,6 @@ export interface iStateListItem {
   text: string;
   order: number;
   todos: iStateTodo[];
-  todoMultiselect: number[];
 }
 export interface iStateTodo {
   id: number;
@@ -13,8 +12,9 @@ export interface iStateTodo {
 }
 export interface iState {
   lists: iStateListItem[];
-  listActive?: number;
-  listMultiselect?: number[];
+  activeList?: number;
+  multiselectLists?: number[];
+  multiselectTodos?: number[];
 }
 export interface iStateAction {
   type: storeActions;
@@ -22,14 +22,18 @@ export interface iStateAction {
 }
 
 export enum storeActions {
-  "listActive" = "listActive",
+  // Lists
+  "activeList" = "activeList",
   "listCreate" = "listCreate",
   "listDelete" = "listDelete",
-  "listToggleMultiSelect" = "listToggleMultiSelect",
-  "listToggleMultiSelectAll" = "listToggleMultiSelectAll",
+  "listToggleMultiselect" = "listToggleMultiselect",
+  "listToggleMultiselectAll" = "listToggleMultiselectAll",
   "listUpdate" = "listUpdate",
+  // Todos
   "todoCreate" = "todoCreate",
   "todoDelete" = "todoDelete",
+  "todoToggleMultiselect" = "todoToggleMultiselect",
+  "todoToggleMultiselectAll" = "todoToggleMultiselectAll",
   "todoUpdate" = "todoUpdate",
 }
 
@@ -39,168 +43,237 @@ let storeLocalStorage;
 if (localstorageData) {
   storeLocalStorage = JSON.parse(localstorageData) as iState;
 }
+
 export const storeDefault = {
   lists: [],
-  listActive: 0,
-  listMultiselect: [],
+  activeList: 0,
+  multiselectLists: [],
+  multiselectTodos: [],
 } as iState;
 export const storeState = storeLocalStorage || storeDefault;
 
+const sortOrder = (first: { order: number }, second: { order: number }) => {
+  return first.order - second.order;
+};
 export const storeReducer = (state: iState, action: iStateAction) => {
   switch (action.type) {
     // ------------------
     // Lists
     // ------------------
+    // List: Create
     case storeActions.listCreate: {
       const lists = state.lists;
-      const listId = Date.now();
+      const idList = Date.now();
       const listsFiltered = lists.filter(({ id }) => {
-        return id !== listId;
+        return id !== idList;
       });
+
       return {
         ...state,
+        // add to lists
         lists: [
           ...listsFiltered,
           {
-            id: listId,
-            text: action.payload.text || `list ${listId}`,
+            id: idList,
+            text: action.payload.text || `list ${idList}`,
             todos: [],
-            todoMultiselect: [],
             order: listsFiltered.length,
           },
         ],
-        listActive: listId,
+        // set as active
+        activeList: idList,
+        // empty out multiselects
+        multiselectLists: [],
+        multiselectTodos: [],
       };
     }
+
+    // List: Update
     case storeActions.listUpdate: {
       const lists = [...state.lists];
-      const listId = action.payload.id;
+      const idList = action.payload.id;
 
       if (action.payload.text === "") {
-        action.payload.text = `(list ${listId})`;
+        action.payload.text = `(list ${idList})`;
       }
-      const indexListToEdit = lists.findIndex(({ id }) => id === listId);
-      lists[indexListToEdit] = {
-        ...lists[indexListToEdit],
+
+      const indexList = lists.findIndex(({ id }) => id === idList);
+      lists[indexList] = {
+        ...lists[indexList],
         ...action.payload,
       };
-      lists.sort((first, second) => {
-        return first.order - second.order;
-      });
+
+      lists.sort(sortOrder);
+
       return {
         ...state,
         lists,
       };
     }
+
+    // List: Delete
     case storeActions.listDelete: {
       const lists = [...state.lists];
-      const listId = action.payload.id;
-      const listActive = state.listActive === listId ? 0 : state.listActive;
+      const idList = action.payload.id;
+      const activeList = state.activeList === idList ? 0 : state.activeList;
 
       // remove from multiselect
-      const listMultiselectCurrent = state?.listMultiselect || [];
+      const currentMultiselectLists = state?.multiselectLists || [];
+      console.log(
+        "?: on storeActions.listDelete, should also empty out multiselectTodos?"
+      );
 
       return {
         ...state,
-        listActive,
-        lists: lists
-          .filter(({ id }) => id !== listId)
-          .sort((first, second) => {
-            return first.order - second.order;
-          }),
-        listMultiselect: listMultiselectCurrent.filter((id) => id !== listId),
+        activeList,
+        lists: lists.filter(({ id }) => id !== idList).sort(sortOrder),
+        multiselectLists: currentMultiselectLists.filter((id) => id !== idList),
       };
     }
-    case storeActions.listActive: {
+
+    // List: Set active
+    case storeActions.activeList: {
       return {
         ...state,
-        listActive: action.payload.id,
+        activeList: action.payload.id,
+        multiselectTodos: [],
       };
     }
-    case storeActions.listToggleMultiSelect: {
-      const listId = action.payload.id;
-      const listMultiselectCurrent = state?.listMultiselect || [];
-      const listMultiselect = listMultiselectCurrent.includes(listId)
-        ? listMultiselectCurrent.filter((id) => id !== listId)
-        : [...listMultiselectCurrent, listId];
+
+    // List: Toggle a multiselect item
+    case storeActions.listToggleMultiselect: {
+      const idList = action.payload.id;
+      const currentMultiselectLists = state?.multiselectLists || [];
+
+      const multiselectLists = currentMultiselectLists.includes(idList)
+        ? currentMultiselectLists.filter((id) => id !== idList)
+        : [...currentMultiselectLists, idList];
+
       return {
         ...state,
-        listMultiselect,
+        multiselectLists,
       };
     }
-    case storeActions.listToggleMultiSelectAll: {
-      const listMultiselectCount = (state?.listMultiselect || []).length;
-      const listMultiselect =
-        listMultiselectCount === state.lists.length
+
+    // List: Toggle all multiselect items
+    case storeActions.listToggleMultiselectAll: {
+      const countMultiselectLists = (state?.multiselectLists || []).length;
+
+      const multiselectLists =
+        countMultiselectLists === state.lists.length
           ? []
           : state.lists.map(({ id }) => id);
+
       return {
         ...state,
-        listMultiselect,
+        multiselectLists,
       };
     }
     // ------------------
     // Todos
     // ------------------
+    // Todo: Create
     case storeActions.todoCreate: {
       const lists = [...state.lists];
-      const listId = action.payload.listId;
-      const indexListToEdit = lists.findIndex(({ id }) => id === listId);
-      const listToEdit = lists[indexListToEdit];
-      const todosFiltered = listToEdit.todos.filter(({ id }) => {
+      const indexList = lists.findIndex(
+        ({ id }) => id === action.payload.idList
+      );
+      const list = lists[indexList];
+      const todosFiltered = list.todos.filter(({ id }) => {
         return id !== action.payload.id;
       });
-      listToEdit.todos = [
+      list.todos = [
         ...todosFiltered,
         {
           ...action.payload,
-          order: listToEdit.todos.length + 1,
+          order: list.todos.length + 1,
         },
       ];
+
       return { ...state, lists };
     }
+
+    // Todo: Update
     case storeActions.todoUpdate: {
       const lists = [...state.lists];
-      const listId = action.payload.listId;
-      const indexListToEdit = lists.findIndex(({ id }) => id === listId);
-      const listToEdit = lists[indexListToEdit];
+      const idList = action.payload.idList;
+      const indexList = lists.findIndex(({ id }) => id === idList);
+      const list = lists[indexList];
 
-      const todoId = action.payload.id;
-      const todos = [...listToEdit.todos];
-      const indexTodoToEdit = todos.findIndex(({ id }) => id === todoId);
-      const todoToEdit = todos[indexTodoToEdit];
-      const todosFiltered = listToEdit.todos.filter(({ id }) => {
-        return id !== todoId;
+      const idTodo = action.payload.id;
+      const todos = [...list.todos];
+      const indexTodo = todos.findIndex(({ id }) => id === idTodo);
+      const todo = todos[indexTodo];
+      const todosFiltered = list.todos.filter(({ id }) => {
+        return id !== idTodo;
       });
-      const todoEdited = {
-        ...todoToEdit,
-        ...action.payload,
-      };
-      listToEdit.todos = [...todosFiltered, todoEdited].sort(
-        (first, second) => {
-          return first.order - second.order;
-        }
-      );
+
+      list.todos = [
+        ...todosFiltered,
+        {
+          ...todo,
+          ...action.payload,
+        },
+      ].sort(sortOrder);
+
       return { ...state, lists };
     }
+
+    // Todo: Delete
     case storeActions.todoDelete: {
       const lists = [...state.lists];
 
-      const listId = action.payload.listId;
-      const indexListToEdit = lists.findIndex(({ id }) => id === listId);
-      const listToEdit = lists[indexListToEdit];
+      const idList = action.payload.idList;
+      const indexList = lists.findIndex(({ id }) => id === idList);
+      const list = lists[indexList];
 
-      const todoId = action.payload.id;
-      const todosFiltered = listToEdit.todos
+      const idTodo = action.payload.id;
+      const todosFiltered = list.todos
         .filter(({ id }) => {
-          return id !== todoId;
+          return id !== idTodo;
         })
-        .sort((first, second) => {
-          return first.order - second.order;
-        });
-      listToEdit.todos = todosFiltered;
+        .sort(sortOrder);
+      list.todos = todosFiltered;
 
-      return { ...state, lists };
+      // remove from multiselectLists
+      const multiselectTodosCurrent = state.multiselectTodos || [];
+      const multiselectTodos = multiselectTodosCurrent.filter(
+        (id) => id !== idTodo
+      );
+
+      return { ...state, lists, multiselectTodos };
+    }
+
+    // Todo: Toggle a multiselect item
+    case storeActions.todoToggleMultiselect: {
+      const idList = action.payload.id;
+      const currentMultiselectTodos = state?.multiselectTodos || [];
+      const multiselectTodos = currentMultiselectTodos.includes(idList)
+        ? currentMultiselectTodos.filter((id) => id !== idList)
+        : [...currentMultiselectTodos, idList];
+      return {
+        ...state,
+        multiselectTodos,
+      };
+    }
+
+    // Todo: Toggle all multiselect items
+    case storeActions.todoToggleMultiselectAll: {
+      const countMultiselectTodos = (state?.multiselectTodos || []).length;
+
+      const indexList = state.lists.findIndex(
+        ({ id }) => id === action.payload.idList
+      );
+      const list = state.lists[indexList];
+
+      const multiselectTodos =
+        countMultiselectTodos === list.todos.length
+          ? []
+          : list.todos.map(({ id }) => id);
+      return {
+        ...state,
+        multiselectTodos,
+      };
     }
     // ------------------
     // Default

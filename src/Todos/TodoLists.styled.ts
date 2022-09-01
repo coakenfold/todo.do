@@ -32,6 +32,13 @@ export const TodoListsNewListButton = styled.button`
   font-size: 1.2rem;
   margin: -0.6rem -0.6rem -0.6rem 0;
   padding: 1rem;
+  &[disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+    &:hover {
+      background-color: hsl(190deg 32% 84% / 20%);
+    }
+  }
 `;
 
 // ======================================
@@ -45,7 +52,7 @@ export const TodoListsListCollection = styled.ul`
   padding: 0;
 `;
 
-export const TodoListsHeadingGroup = styled.div`
+export const TodoListsHeaderGroup = styled.div`
   display: flex;
   margin: 0 0 0.3rem;
 `;
@@ -156,7 +163,7 @@ export const TodoListsListDetailsButton = styled.button`
     background-color: hsl(190deg 100% 50% / 10%);
   }
 `;
-export const TodoListsListMultiSelectButton = styled.button`
+export const TodoListsListMultiselectButton = styled.button`
   transition: color 190ms, background-color 240ms;
   background-color: #fff;
 

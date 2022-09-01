@@ -30,7 +30,7 @@ export const TodoGroup = styled.li`
     background-color: rgb(124 201 255 / 50%);
   }
 `;
-export const TodoMultiSelectButton = styled.button`
+export const TodoMultiselectButton = styled.button`
   transition: color 190ms, background-color 240ms;
   background-color: #fff;
 
@@ -44,8 +44,12 @@ export const TodoMultiSelectButton = styled.button`
 
   &:focus,
   &:hover {
-    background-color: hsl(190deg 100% 50% / 20%);
-    color: hsl(190deg 82% 19%);
+    background-color: hsl(48deg 100% 81%);
+    color: hsl(48deg 70% 21%);
+  }
+  &.selected {
+    background-color: hsl(47deg 100% 73%);
+    color: hsl(48deg 84% 17%);
   }
 `;
 export const TodoDeleteButton = styled.button`

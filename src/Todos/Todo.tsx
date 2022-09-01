@@ -6,16 +6,16 @@ import {
   TodoName,
   TodoActionsGroup,
   TodoDeleteButton,
-  TodoMultiSelectButton,
+  TodoMultiselectButton,
 } from "./Todo.styled";
 
 const HIGHLIGHT_TIME = 2000;
 export interface iTodoProps {
   todo: iStateTodo;
-  listId: number;
+  idList: number;
 }
-export const Todo = ({ todo, listId }: iTodoProps) => {
-  const { dispatch } = useContext(StateContext);
+export const Todo = ({ todo, idList }: iTodoProps) => {
+  const { state, dispatch } = useContext(StateContext);
 
   // Highlight on todo creation
   const refTodoGroup = useRef<HTMLLIElement>(null);
@@ -47,7 +47,7 @@ export const Todo = ({ todo, listId }: iTodoProps) => {
     dispatch?.({
       type: storeActions.todoUpdate,
       payload: {
-        listId: listId,
+        idList: idList,
         id: todo.id,
         isDone: !todo.isDone,
       },
@@ -71,12 +71,10 @@ export const Todo = ({ todo, listId }: iTodoProps) => {
     code,
     currentTarget,
     text,
-    id,
   }: {
     code: string;
     currentTarget: EventTarget & HTMLInputElement;
     text: string;
-    id: number;
   }) => {
     const textCurrent = currentTarget.value;
     if (code === "Enter" || code === "NumpadEnter") {
@@ -84,8 +82,8 @@ export const Todo = ({ todo, listId }: iTodoProps) => {
         dispatch?.({
           type: storeActions.todoUpdate,
           payload: {
-            listId: listId,
-            id,
+            idList: idList,
+            id: todo.id,
             text: textCurrent,
           },
         });
@@ -101,20 +99,23 @@ export const Todo = ({ todo, listId }: iTodoProps) => {
     }
   };
 
-  const onClickToggleMultiSelect = () => {
-    // onClickMultiSelectItem({ id, isChecked });
+  const onClickToggleMultiselect = () => {
+    dispatch?.({
+      type: storeActions.todoToggleMultiselect,
+      payload: { id: todo.id },
+    });
   };
-
   const onClickDeleteItem = () => {
     dispatch?.({
       type: storeActions.todoDelete,
       payload: {
-        listId: listId,
+        idList: idList,
         id: todo.id,
       },
     });
   };
 
+  const isSelected = state.multiselectTodos?.includes(todo.id);
   var itemClass = `form-check todoitem ${todo.isDone ? "done" : "undone"}`;
   return (
     <TodoGroup className={itemClass} ref={refTodoGroup}>
@@ -123,6 +124,7 @@ export const Todo = ({ todo, listId }: iTodoProps) => {
         className="form-check-input"
         onChange={onChangeCompleteStatus}
         defaultChecked={todo.isDone}
+        checked={todo.isDone}
       />
 
       <TodoName
@@ -135,16 +137,18 @@ export const Todo = ({ todo, listId }: iTodoProps) => {
             code,
             currentTarget,
             text: todo.text,
-            id: todo.id,
           });
         }}
         defaultValue={todo.text}
         disabled={todo.isDone}
       />
       <TodoActionsGroup>
-        <TodoMultiSelectButton onClick={onClickToggleMultiSelect}>
-          Select
-        </TodoMultiSelectButton>
+        <TodoMultiselectButton
+          onClick={onClickToggleMultiselect}
+          className={isSelected ? "selected" : ""}
+        >
+          {isSelected ? "Deselect" : "Select"}
+        </TodoMultiselectButton>
         <TodoDeleteButton onClick={onClickDeleteItem}>Delete</TodoDeleteButton>
       </TodoActionsGroup>
     </TodoGroup>

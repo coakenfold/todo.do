@@ -9,7 +9,7 @@ export const Todos = () => {
     <TodoGroup>
       <TodoTitle>Todo.Do</TodoTitle>
       <TodoLists />
-      {state.listActive ? <TodoList listId={state.listActive} /> : <></>}
+      {state.activeList ? <TodoList idList={state.activeList} /> : <></>}
     </TodoGroup>
   );
 };

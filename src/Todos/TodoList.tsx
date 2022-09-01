@@ -4,13 +4,17 @@ import { StateContext } from "./TodosProvider";
 import { Todo } from "./Todo";
 import {
   TodoListGroup,
-  TodoListHeaderGroup,
   TodoListHeaderHeading,
   TodoListHeaderTitle,
   TodoListTodosList,
   TodoListNewTodoGroup,
   TodoListNewTodoInput,
   TodoListNewTodoButton,
+  TodoListMultiselectActionGroup,
+  TodoListMultiselectDeleteButton,
+  TodoListMultiselectSelectAllButton,
+  TodoListHeaderHeadingTitleGroup,
+  TodoListMultiselectMarkCompleteButton,
 } from "./TodoList.styled";
 
 export interface iTodoListItem {
@@ -22,20 +26,20 @@ export interface iTodoListItem {
 export interface iTodoListProps {
   list: iStateListItem;
 }
-export const TodoList = ({ listId }: { listId: number }) => {
+export const TodoList = ({ idList }: { idList: number }) => {
   const { state, dispatch } = useContext(StateContext);
   const [textTodo, setTextTodo] = useState("");
   const onChangeText = (value: string) => {
     setTextTodo(value);
   };
 
-  const list = state.lists.find(({ id }) => id === listId);
+  const list = state.lists.find(({ id }) => id === idList) as iStateListItem;
 
   const onClickAddItem = () => {
     dispatch?.({
       type: storeActions.todoCreate,
       payload: {
-        listId: list?.id,
+        idList: list.id,
         id: Date.now(),
         isDone: false,
         text: textTodo,
@@ -43,24 +47,48 @@ export const TodoList = ({ listId }: { listId: number }) => {
     });
     setTextTodo("");
   };
-  // const onClickMultiSelectItem = ({
-  //   id,
-  //   isChecked,
-  // }: {
-  //   id: number;
-  //   isChecked: boolean;
-  // }) => {
-  //   console.log("onClickMultiSelectItem", {
-  //     id,
-  //     isChecked,
-  //   });
-  // };
+  const onClickToggleMultiselectAll = ({ idList }: { idList: number }) => {
+    dispatch?.({
+      type: storeActions.todoToggleMultiselectAll,
+      payload: { idList },
+    });
+  };
+
+  const onClickToggleMultiselectDelete = () => {
+    const multiselectItems = state.multiselectTodos || [];
+    multiselectItems.forEach((idMultiselect) => {
+      dispatch?.({
+        type: storeActions.todoDelete,
+        payload: { idList, id: idMultiselect },
+      });
+    });
+  };
+  const onClickToggleMultiselectComplete = ({
+    isDone,
+  }: {
+    isDone: boolean;
+  }) => {
+    const multiselectItems = state.multiselectTodos || [];
+    multiselectItems.forEach((idMultiselect) => {
+      dispatch?.({
+        type: storeActions.todoUpdate,
+        payload: {
+          idList,
+          id: idMultiselect,
+          isDone,
+        },
+      });
+    });
+  };
+
+  const currentMultiselectTodos = state.multiselectTodos || [];
+  const areAllTodosComplete = list.todos.every(({ isDone }) => isDone);
   return (
     <TodoListGroup>
-      <TodoListHeaderGroup>
-        <TodoListHeaderHeading>Todo.List</TodoListHeaderHeading>
-        <TodoListHeaderTitle>{list?.text}</TodoListHeaderTitle>
-      </TodoListHeaderGroup>
+      <TodoListHeaderHeadingTitleGroup>
+        <TodoListHeaderHeading>Todo.List.Todos</TodoListHeaderHeading>
+        <TodoListHeaderTitle>{list.text}</TodoListHeaderTitle>
+      </TodoListHeaderHeadingTitleGroup>
 
       <TodoListNewTodoGroup>
         <TodoListNewTodoInput
@@ -78,13 +106,55 @@ export const TodoList = ({ listId }: { listId: number }) => {
           }}
           disabled={textTodo === ""}
         >
-          {"Add Todo " + ((list?.todos.length || 0) + 1)}
+          {"Add Todo " + ((list.todos.length || 0) + 1)}
         </TodoListNewTodoButton>
       </TodoListNewTodoGroup>
 
+      <TodoListMultiselectActionGroup>
+        <div>
+          {state.lists.length > 1 ? (
+            <TodoListMultiselectSelectAllButton
+              onClick={() => {
+                onClickToggleMultiselectAll({ idList: list.id });
+              }}
+            >
+              {currentMultiselectTodos.length === list.todos.length
+                ? `Deselect all Todos`
+                : `Select all Todos`}
+            </TodoListMultiselectSelectAllButton>
+          ) : (
+            <></>
+          )}
+          {currentMultiselectTodos && currentMultiselectTodos.length > 1 ? (
+            <>
+              <TodoListMultiselectMarkCompleteButton
+                onClick={() => {
+                  onClickToggleMultiselectComplete({
+                    isDone: !areAllTodosComplete,
+                  });
+                }}
+              >
+                {areAllTodosComplete
+                  ? "Set selected Todos to Not Done"
+                  : "Set selected Todos to Done"}
+              </TodoListMultiselectMarkCompleteButton>
+
+              <TodoListMultiselectDeleteButton
+                onClick={onClickToggleMultiselectDelete}
+              >
+                {currentMultiselectTodos.length > 1
+                  ? "Delete selected Todos"
+                  : "Delete selected Todo"}
+              </TodoListMultiselectDeleteButton>
+            </>
+          ) : (
+            <></>
+          )}
+        </div>
+      </TodoListMultiselectActionGroup>
       <TodoListTodosList>
-        {list?.todos.map((todo) => (
-          <Todo key={todo.id} todo={todo} listId={list.id} />
+        {list.todos.map((todo) => (
+          <Todo key={todo.id} todo={todo} idList={list.id} />
         ))}
       </TodoListTodosList>
     </TodoListGroup>
