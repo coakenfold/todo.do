@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export const TodoListGroup = styled.div`
-  padding-left: 0;
+  margin: 0 1.3rem 1.3rem;
 `;
 // ======================================
 // Header
@@ -18,7 +18,7 @@ export const TodoListHeaderHeading = styled.h3`
 
 export const TodoListHeaderTitle = styled.h2`
   margin: 0;
-  font-size: 1.6rem;
+  font-size: 2.3rem;
   font-weight: 100;
   margin-bottom: 1.3rem;
 `;
@@ -27,7 +27,7 @@ export const TodoListMultiselectSelectAllButton = styled.button`
   transition: color 190ms, background-color 240ms;
 
   color: hsl(48deg 84% 17%);
-  background-color: #fff;
+  background-color: hsl(48deg 100% 90%);
   border: 2px solid hsl(47deg 100% 73% / 33%);
 
   border-radius: 0.6rem;
@@ -85,7 +85,7 @@ export const TodoListMultiselectMarkCompleteButton = styled.button`
 `;
 export const TodoListMultiselectActionGroup = styled.div`
   padding: 0;
-  margin: 0 1.3rem 0.6rem;
+  margin-bottom: 0.6rem;
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -139,6 +139,6 @@ export const TodoListNewTodoButton = styled.button`
 // Display todos
 // ----------------------------------
 export const TodoListTodosList = styled.ul`
-  margin: 0 1.3rem;
+  margin: 0;
   padding: 0;
 `;

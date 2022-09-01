@@ -5,7 +5,6 @@ import {
   TodoListsListItem,
   TodoListsListActionsGroup,
   TodoListsListCollection,
-  TodoListsListCollectionEmpty,
   TodoListsListGroup,
   TodoListsHeaderGroup,
   TodoListsTitle,
@@ -127,42 +126,39 @@ export const TodoLists = () => {
           Create List
         </TodoListsNewListButton>
       </TodoListsNewListGroup>
+      {state.lists.length > 0 ? (
+        <TodoListsListGroup>
+          <TodoListsHeaderGroup>
+            <TodoListsTitle>Todo.Lists</TodoListsTitle>
 
-      <TodoListsListGroup>
-        <TodoListsHeaderGroup>
-          <TodoListsTitle>Todo.Lists</TodoListsTitle>
+            <TodoListsMultiselectActionGroup>
+              {state.multiselectLists && state.multiselectLists.length > 1 ? (
+                <TodoListsMultiselectDeleteButton
+                  onClick={() => {
+                    onClickToggleMultiselectDelete();
+                  }}
+                >
+                  {state.multiselectLists.length > 1
+                    ? "Delete selected Lists"
+                    : "Delete selected List"}
+                </TodoListsMultiselectDeleteButton>
+              ) : (
+                <></>
+              )}
+              {state.lists.length > 1 ? (
+                <TodoListsMultiselectSelectAllButton
+                  onClick={onClickToggleMultiselectAll}
+                >
+                  {state.multiselectLists?.length === state.lists.length
+                    ? `Deselect all Lists`
+                    : `Select all Lists`}
+                </TodoListsMultiselectSelectAllButton>
+              ) : (
+                <></>
+              )}
+            </TodoListsMultiselectActionGroup>
+          </TodoListsHeaderGroup>
 
-          <TodoListsMultiselectActionGroup>
-            {state.multiselectLists && state.multiselectLists.length > 1 ? (
-              <TodoListsMultiselectDeleteButton
-                onClick={() => {
-                  onClickToggleMultiselectDelete();
-                }}
-              >
-                {state.multiselectLists.length > 1
-                  ? "Delete selected Lists"
-                  : "Delete selected List"}
-              </TodoListsMultiselectDeleteButton>
-            ) : (
-              <></>
-            )}
-            {state.lists.length > 1 ? (
-              <TodoListsMultiselectSelectAllButton
-                onClick={onClickToggleMultiselectAll}
-              >
-                {state.multiselectLists?.length === state.lists.length
-                  ? `Deselect all Lists`
-                  : `Select all Lists`}
-              </TodoListsMultiselectSelectAllButton>
-            ) : (
-              <></>
-            )}
-          </TodoListsMultiselectActionGroup>
-        </TodoListsHeaderGroup>
-
-        {state.lists.length === 0 ? (
-          <TodoListsListCollectionEmpty>No lists</TodoListsListCollectionEmpty>
-        ) : (
           <TodoListsListCollection>
             {state.lists.map(({ id, text }) => {
               return (
@@ -214,8 +210,10 @@ export const TodoLists = () => {
               );
             })}
           </TodoListsListCollection>
-        )}
-      </TodoListsListGroup>
+        </TodoListsListGroup>
+      ) : (
+        <></>
+      )}
     </>
   );
 };

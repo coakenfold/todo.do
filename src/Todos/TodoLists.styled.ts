@@ -8,7 +8,7 @@ export const TodoListsNewListGroup = styled.form`
   border-radius: 1rem;
   display: flex;
   padding: 1rem;
-  margin-bottom: 3rem;
+  margin-bottom: 0.3rem;
 `;
 export const TodoListsNewListInput = styled.input`
   background: transparent;
@@ -45,7 +45,7 @@ export const TodoListsNewListButton = styled.button`
 // Display lists
 // ----------------------------------
 export const TodoListsListGroup = styled.div`
-  margin-bottom: 3rem;
+  margin: 1.6rem 0 1.9rem;
 `;
 export const TodoListsListCollection = styled.ul`
   margin: 0;
@@ -70,7 +70,7 @@ export const TodoListsMultiselectSelectAllButton = styled.button`
   transition: color 190ms, background-color 240ms;
 
   color: hsl(48deg 84% 17%);
-  background-color: #fff;
+  background-color: hsl(48deg 100% 90%);
   border: 2px solid hsl(47deg 100% 73% / 33%);
 
   border-radius: 0.6rem;
@@ -113,12 +113,6 @@ export const TodoListsMultiselectActionGroup = styled.div`
   ${TodoListsMultiselectSelectAllButton} {
     margin-left: 0.3rem;
   }
-`;
-
-export const TodoListsListCollectionEmpty = styled.h3`
-  margin: 0;
-  padding: 1rem;
-  font-weight: 100;
 `;
 
 // ======================================

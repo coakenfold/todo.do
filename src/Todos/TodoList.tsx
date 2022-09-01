@@ -112,7 +112,7 @@ export const TodoList = ({ idList }: { idList: number }) => {
 
       <TodoListMultiselectActionGroup>
         <div>
-          {state.lists.length > 1 ? (
+          {list.todos.length > 1 ? (
             <TodoListMultiselectSelectAllButton
               onClick={() => {
                 onClickToggleMultiselectAll({ idList: list.id });
@@ -135,8 +135,8 @@ export const TodoList = ({ idList }: { idList: number }) => {
                 }}
               >
                 {areAllTodosComplete
-                  ? "Set selected Todos to Not Done"
-                  : "Set selected Todos to Done"}
+                  ? "Mark selected Todos as not done"
+                  : "Mark selected Todos as done"}
               </TodoListMultiselectMarkCompleteButton>
 
               <TodoListMultiselectDeleteButton
