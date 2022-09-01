@@ -7,8 +7,9 @@ export const TodoGroup = styled.div`
   padding: 1rem;
   margin: 0 auto;
   box-shadow: 0px 10px 40px 0px rgb(76 70 124 / 50%);
-  min-width: 40rem;
+
   max-width: 66rem;
+  min-width: 35rem;
 `;
 
 export const TodoTitle = styled.h1`

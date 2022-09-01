@@ -1,5 +1,25 @@
+html {
+    font-size: 10px;
+}
 body {
     background-color: #d6dae0;
-    padding: 1rem;
-    font-size: 16px;
+    padding: 0;
+}
+@media (min-width: 400px) {
+    html {
+        font-size: 12px;
+    }
+}
+@media (min-width: 600px) {
+    html {
+        font-size: 14px;
+    }
+    body {
+        padding: 1rem 3rem;
+    }
+}
+@media (min-width: 800px) {
+    html {
+        font-size: 16px;
+    }
 }
