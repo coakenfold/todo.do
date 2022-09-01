@@ -77,3 +77,8 @@ export const TodoActionsGroup = styled.div`
     margin-left: 0.9rem;
   }
 `;
+
+export const TodoCheckboxGroup = styled.div`
+  display: flex;
+  align-items: center;
+`;
