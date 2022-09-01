@@ -5,6 +5,7 @@ import {
   TodoGroup,
   TodoName,
   TodoActionsGroup,
+  TodoCheckboxGroup,
   TodoDeleteButton,
   TodoMultiselectButton,
 } from "./Todo.styled";
@@ -118,11 +119,13 @@ export const Todo = ({ todo, idList }: iTodoProps) => {
   const isSelected = state.multiselectTodos?.includes(todo.id);
   return (
     <TodoGroup className={todo.isDone ? "done" : "undone"} ref={refTodoGroup}>
-      <input
-        type="checkbox"
-        onChange={onChangeCompleteStatus}
-        checked={todo.isDone}
-      />
+      <TodoCheckboxGroup>
+        <input
+          type="checkbox"
+          onChange={onChangeCompleteStatus}
+          checked={todo.isDone}
+        />
+      </TodoCheckboxGroup>
       <TodoName
         contentEditable="false"
         onBlur={({ target }) => {
