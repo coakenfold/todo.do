@@ -121,7 +121,6 @@ export const Todo = ({ todo, idList }: iTodoProps) => {
       <input
         type="checkbox"
         onChange={onChangeCompleteStatus}
-        defaultChecked={todo.isDone}
         checked={todo.isDone}
       />
       <TodoName
