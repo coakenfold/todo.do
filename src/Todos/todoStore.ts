@@ -119,9 +119,6 @@ export const storeReducer = (state: iState, action: iStateAction) => {
 
       // remove from multiselect
       const currentMultiselectLists = state?.multiselectLists || [];
-      console.log(
-        "?: on storeActions.listDelete, should also empty out multiselectTodos?"
-      );
 
       return {
         ...state,
