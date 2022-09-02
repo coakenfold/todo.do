@@ -11,12 +11,15 @@ body {
         font-size: 14px;
     }
     body {
-        padding: 1rem 3rem;
+        padding: 1rem 2rem;
         background-color: #d6dae0;
     }
 }
 @media (min-width: 800px) {
     html {
         font-size: 16px;
+    }
+    body {
+        padding: 1rem 3rem;
     }
 }

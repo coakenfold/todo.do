@@ -85,13 +85,14 @@ export const TodoListMultiselectMarkCompleteButton = styled.button`
 `;
 export const TodoListMultiselectActionGroup = styled.div`
   padding: 0;
-  margin-bottom: 0.6rem;
   display: flex;
   justify-content: flex-start;
   align-items: center;
+
   ${TodoListMultiselectSelectAllButton},
+  ${TodoListMultiselectDeleteButton},
   ${TodoListMultiselectMarkCompleteButton} {
-    margin-right: 0.3rem;
+    margin: 0.3rem;
   }
 `;
 // ======================================
@@ -102,7 +103,7 @@ export const TodoListNewTodoGroup = styled.form`
   border-radius: 1rem;
   display: flex;
   padding: 1rem;
-  margin-bottom: 0.9rem;
+  margin-bottom: 0.6rem;
 `;
 export const TodoListNewTodoInput = styled.input`
   background: transparent;
