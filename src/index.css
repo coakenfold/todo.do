@@ -2,13 +2,9 @@ html {
     font-size: 10px;
 }
 body {
-    background-color: #d6dae0;
+    background-color: #fff;
     padding: 0;
-}
-@media (min-width: 400px) {
-    html {
-        font-size: 12px;
-    }
+    margin:0;
 }
 @media (min-width: 600px) {
     html {
@@ -16,6 +12,7 @@ body {
     }
     body {
         padding: 1rem 3rem;
+        background-color: #d6dae0;
     }
 }
 @media (min-width: 800px) {
