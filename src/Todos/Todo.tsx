@@ -130,7 +130,9 @@ export const Todo = ({ todo, idList }: iTodoProps) => {
           id={`todo${todo.id}.isDone`}
         />
       </TodoCheckboxGroup>
-      <label htmlFor={`todo${todo.id}`}>Edit Todo #{todo.id}</label>
+      <label htmlFor={`todo${todo.id}`} className="sr-only">
+        Edit Todo #{todo.id}
+      </label>
       <TodoName
         contentEditable="false"
         onBlur={({ target }) => {
