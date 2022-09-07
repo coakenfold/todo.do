@@ -15,7 +15,7 @@ import {
   TodoListsMultiselectActionGroup,
   TodoListsMultiselectSelectAllButton,
   TodoListsNewListButton,
-  TodoListsNewListGroup,
+  TodoListsNewListForm,
   TodoListsNewListInput,
   TodoListsMultiselectDeleteButton,
 } from "./TodoLists.styled";
@@ -107,7 +107,10 @@ export const TodoLists = () => {
 
   return (
     <>
-      <TodoListsNewListGroup>
+      <TodoListsNewListForm>
+        <label htmlFor="NewListInput" className="sr-only">
+          Create a Todo List
+        </label>
         <TodoListsNewListInput
           type="text"
           placeholder="New list name"
@@ -115,6 +118,7 @@ export const TodoLists = () => {
             onChangeListText(event.target.value);
           }}
           value={textList}
+          id="NewListInput"
         />
         <TodoListsNewListButton
           onClick={(e) => {
@@ -123,9 +127,9 @@ export const TodoLists = () => {
           }}
           disabled={textList === ""}
         >
-          Create List
+          Create a Todo List
         </TodoListsNewListButton>
-      </TodoListsNewListGroup>
+      </TodoListsNewListForm>
       {state.lists.length > 0 ? (
         <TodoListsListGroup>
           <TodoListsHeaderGroup>
@@ -174,16 +178,22 @@ export const TodoLists = () => {
                     </TodoListsListDetailsButton>
                   </TodoListsListActionsGroup>
 
-                  <TodoListsListName
-                    contentEditable="false"
-                    onBlur={({ target }) => {
-                      onBlurListName({ target, text });
-                    }}
-                    onKeyDown={({ code, currentTarget }) => {
-                      onKeyDownListName({ code, currentTarget, text, id });
-                    }}
-                    defaultValue={text}
-                  />
+                  <form>
+                    <label htmlFor={`list${id}`} className="sr-only">
+                      Edit Todo List #{id}
+                    </label>
+                    <TodoListsListName
+                      contentEditable="false"
+                      onBlur={({ target }) => {
+                        onBlurListName({ target, text });
+                      }}
+                      onKeyDown={({ code, currentTarget }) => {
+                        onKeyDownListName({ code, currentTarget, text, id });
+                      }}
+                      id={`list${id}`}
+                      defaultValue={text}
+                    />
+                  </form>
 
                   <TodoListsListActionsGroup>
                     <TodoListsListMultiselectButton

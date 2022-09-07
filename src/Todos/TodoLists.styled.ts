@@ -3,7 +3,7 @@ import styled from "styled-components";
 // ======================================
 // Create list
 // ----------------------------------
-export const TodoListsNewListGroup = styled.form`
+export const TodoListsNewListForm = styled.form`
   box-shadow: 0px 10px 40px 0px rgb(133 168 194 / 20%);
   border-radius: 1rem;
   display: flex;
