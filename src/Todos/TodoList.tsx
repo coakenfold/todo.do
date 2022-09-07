@@ -86,34 +86,33 @@ export const TodoList = ({ idList }: { idList: number }) => {
   return (
     <TodoListGroup>
       <TodoListHeaderHeadingTitleGroup>
-        <TodoListHeaderHeading>Todo.List.Todos</TodoListHeaderHeading>
+        <TodoListHeaderHeading>Todo List: Todos</TodoListHeaderHeading>
         <TodoListHeaderTitle>{list.text}</TodoListHeaderTitle>
       </TodoListHeaderHeadingTitleGroup>
 
-      <TodoListNewTodoForm>
-        <form>
-          <label htmlFor="newTodoItem" className="sr-only">
-            Create a Todo
-          </label>
-          <TodoListNewTodoInput
-            type="text"
-            placeholder="Create a Todo"
-            onChange={(event) => {
-              onChangeText(event.target.value);
-            }}
-            value={textTodo}
-            id="newTodoItem"
-          />
-          <TodoListNewTodoButton
-            onClick={(event) => {
-              event.preventDefault();
-              onClickAddItem();
-            }}
-            disabled={textTodo === ""}
-          >
-            {"Add Todo " + ((list.todos.length || 0) + 1)}
-          </TodoListNewTodoButton>
-        </form>
+      <TodoListNewTodoForm
+        onSubmit={(event) => {
+          event?.preventDefault();
+        }}
+      >
+        <label htmlFor="newTodoItem" className="sr-only">
+          New Todo name
+        </label>
+        <TodoListNewTodoInput
+          placeholder="New Todo name"
+          type="text"
+          onChange={(event) => {
+            onChangeText(event.target.value);
+          }}
+          value={textTodo}
+          id="newTodoItem"
+        />
+        <TodoListNewTodoButton
+          onClick={onClickAddItem}
+          disabled={textTodo === ""}
+        >
+          {"Create Todo " + ((list.todos.length || 0) + 1)}
+        </TodoListNewTodoButton>
       </TodoListNewTodoForm>
 
       <TodoListMultiselectActionGroup>

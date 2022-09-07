@@ -1,4 +1,4 @@
-# Todo.do
+# Todo Do
 
 A todo list saved to local storage. Using React's `useReducer` hook to manage state
 

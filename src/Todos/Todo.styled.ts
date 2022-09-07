@@ -9,7 +9,10 @@ export const TodoName = styled.input`
   &:focus {
   }
 `;
-export const TodoForm = styled.li`
+export const TodoItem = styled.li`
+  list-style-type: none;
+`;
+export const TodoForm = styled.form`
   border-radius: 0.75rem;
   display: flex;
   list-style-type: none;

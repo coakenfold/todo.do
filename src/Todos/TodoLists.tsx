@@ -2,22 +2,23 @@ import { useState, useContext } from "react";
 import { storeActions } from "./todoStore";
 import { StateContext } from "./TodosProvider";
 import {
-  TodoListsListItem,
+  TodoListsHeaderGroup,
   TodoListsListActionsGroup,
   TodoListsListCollection,
-  TodoListsListGroup,
-  TodoListsHeaderGroup,
-  TodoListsTitle,
   TodoListsListDeleteButton,
   TodoListsListDetailsButton,
+  TodoListsListGroup,
+  TodoListsListItem,
+  TodoListsListItemForm,
   TodoListsListMultiselectButton,
   TodoListsListName,
   TodoListsMultiselectActionGroup,
+  TodoListsMultiselectDeleteButton,
   TodoListsMultiselectSelectAllButton,
   TodoListsNewListButton,
   TodoListsNewListForm,
   TodoListsNewListInput,
-  TodoListsMultiselectDeleteButton,
+  TodoListsTitle,
 } from "./TodoLists.styled";
 
 export const TodoLists = () => {
@@ -107,13 +108,17 @@ export const TodoLists = () => {
 
   return (
     <>
-      <TodoListsNewListForm>
+      <TodoListsNewListForm
+        onSubmit={(event) => {
+          event?.preventDefault();
+        }}
+      >
         <label htmlFor="NewListInput" className="sr-only">
-          Create a Todo List
+          New Todo List name
         </label>
         <TodoListsNewListInput
+          placeholder="New Todo List name"
           type="text"
-          placeholder="New list name"
           onChange={(event) => {
             onChangeListText(event.target.value);
           }}
@@ -127,13 +132,13 @@ export const TodoLists = () => {
           }}
           disabled={textList === ""}
         >
-          Create a Todo List
+          Create new Todo List
         </TodoListsNewListButton>
       </TodoListsNewListForm>
       {state.lists.length > 0 ? (
         <TodoListsListGroup>
           <TodoListsHeaderGroup>
-            <TodoListsTitle>Todo.Lists</TodoListsTitle>
+            <TodoListsTitle>Todo Lists:</TodoListsTitle>
 
             <TodoListsMultiselectActionGroup>
               {state.multiselectLists && state.multiselectLists.length > 1 ? (
@@ -143,8 +148,8 @@ export const TodoLists = () => {
                   }}
                 >
                   {state.multiselectLists.length > 1
-                    ? "Delete selected Lists"
-                    : "Delete selected List"}
+                    ? "Delete selected Todo Lists"
+                    : "Delete selected Todo List"}
                 </TodoListsMultiselectDeleteButton>
               ) : (
                 <></>
@@ -154,8 +159,8 @@ export const TodoLists = () => {
                   onClick={onClickToggleMultiselectAll}
                 >
                   {state.multiselectLists?.length === state.lists.length
-                    ? `Deselect all Lists`
-                    : `Select all Lists`}
+                    ? `Deselect all Todo Lists`
+                    : `Select all Todo Lists`}
                 </TodoListsMultiselectSelectAllButton>
               ) : (
                 <></>
@@ -167,18 +172,22 @@ export const TodoLists = () => {
             {state.lists.map(({ id, text }) => {
               return (
                 <TodoListsListItem key={id}>
-                  <TodoListsListActionsGroup>
-                    <TodoListsListDetailsButton
-                      className={id === state.activeList ? "active" : ""}
-                      onClick={() => {
-                        _onClickListView(id);
-                      }}
-                    >
-                      {id === state.activeList ? "Viewing" : "View"}
-                    </TodoListsListDetailsButton>
-                  </TodoListsListActionsGroup>
-
-                  <form>
+                  <TodoListsListItemForm
+                    onSubmit={(event) => {
+                      event?.preventDefault();
+                    }}
+                  >
+                    <TodoListsListActionsGroup>
+                      <TodoListsListDetailsButton
+                        className={id === state.activeList ? "active" : ""}
+                        onClick={() => {
+                          _onClickListView(id);
+                        }}
+                        type="button"
+                      >
+                        {id === state.activeList ? "Viewing" : "View"}
+                      </TodoListsListDetailsButton>
+                    </TodoListsListActionsGroup>
                     <label htmlFor={`list${id}`} className="sr-only">
                       Edit Todo List #{id}
                     </label>
@@ -193,29 +202,31 @@ export const TodoLists = () => {
                       id={`list${id}`}
                       defaultValue={text}
                     />
-                  </form>
 
-                  <TodoListsListActionsGroup>
-                    <TodoListsListMultiselectButton
-                      onClick={() => {
-                        onClickToggleMultiselect(id);
-                      }}
-                      className={
-                        state.multiselectLists?.includes(id) ? "selected" : ""
-                      }
-                    >
-                      {state.multiselectLists?.includes(id)
-                        ? "Deselect"
-                        : "Select"}
-                    </TodoListsListMultiselectButton>
-                    <TodoListsListDeleteButton
-                      onClick={() => {
-                        onClickListDelete(id);
-                      }}
-                    >
-                      Delete
-                    </TodoListsListDeleteButton>
-                  </TodoListsListActionsGroup>
+                    <TodoListsListActionsGroup>
+                      <TodoListsListMultiselectButton
+                        onClick={() => {
+                          onClickToggleMultiselect(id);
+                        }}
+                        className={
+                          state.multiselectLists?.includes(id) ? "selected" : ""
+                        }
+                        type="button"
+                      >
+                        {state.multiselectLists?.includes(id)
+                          ? "Deselect"
+                          : "Select"}
+                      </TodoListsListMultiselectButton>
+                      <TodoListsListDeleteButton
+                        onClick={() => {
+                          onClickListDelete(id);
+                        }}
+                        type="button"
+                      >
+                        Delete
+                      </TodoListsListDeleteButton>
+                    </TodoListsListActionsGroup>
+                  </TodoListsListItemForm>
                 </TodoListsListItem>
               );
             })}

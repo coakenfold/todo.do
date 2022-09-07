@@ -119,9 +119,11 @@ export const TodoListsMultiselectActionGroup = styled.div`
 // List
 // ----------------------------------
 export const TodoListsListItem = styled.li`
+  list-style-type: none;
+`;
+export const TodoListsListItemForm = styled.form`
   border-radius: 0.75rem;
   display: flex;
-  list-style-type: none;
   padding: 0 0.6rem;
   transition: background-color 190ms;
   &:hover {

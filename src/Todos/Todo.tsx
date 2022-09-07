@@ -2,6 +2,7 @@ import { useEffect, useRef, useContext } from "react";
 import { iStateTodo, storeActions } from "./todoStore";
 import { StateContext } from "./TodosProvider";
 import {
+  TodoItem,
   TodoForm,
   TodoName,
   TodoActionsGroup,
@@ -19,7 +20,7 @@ export const Todo = ({ todo, idList }: iTodoProps) => {
   const { state, dispatch } = useContext(StateContext);
 
   // Highlight on todo creation
-  const refTodoForm = useRef<HTMLLIElement>(null);
+  const refTodoForm = useRef<HTMLFormElement>(null);
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
     // NOTE: `todo.id` is a timestamp
@@ -118,46 +119,57 @@ export const Todo = ({ todo, idList }: iTodoProps) => {
 
   const isSelected = state.multiselectTodos?.includes(todo.id);
   return (
-    <TodoForm className={todo.isDone ? "done" : "undone"} ref={refTodoForm}>
-      <label htmlFor={`todo${todo.id}.isDone`} className="sr-only">
-        Finish Todo #{todo.id}
-      </label>
-      <TodoCheckboxGroup>
-        <input
-          type="checkbox"
-          onChange={onChangeCompleteStatus}
-          checked={todo.isDone}
-          id={`todo${todo.id}.isDone`}
+    <TodoItem>
+      <TodoForm
+        className={todo.isDone ? "done" : "undone"}
+        ref={refTodoForm}
+        onSubmit={(event) => {
+          event?.preventDefault();
+        }}
+      >
+        <label htmlFor={`todo${todo.id}.isDone`} className="sr-only">
+          Finish Todo #{todo.id}
+        </label>
+        <TodoCheckboxGroup>
+          <input
+            type="checkbox"
+            onChange={onChangeCompleteStatus}
+            checked={todo.isDone}
+            id={`todo${todo.id}.isDone`}
+          />
+        </TodoCheckboxGroup>
+        <label htmlFor={`todo${todo.id}`} className="sr-only">
+          Edit Todo #{todo.id}
+        </label>
+        <TodoName
+          contentEditable="false"
+          onBlur={({ target }) => {
+            onBlurTodoName({ target, text: todo.text });
+          }}
+          onKeyDown={({ code, currentTarget }) => {
+            onKeyDownTodoName({
+              code,
+              currentTarget,
+              text: todo.text,
+            });
+          }}
+          defaultValue={todo.text}
+          disabled={todo.isDone}
+          id={`todo${todo.id}`}
         />
-      </TodoCheckboxGroup>
-      <label htmlFor={`todo${todo.id}`} className="sr-only">
-        Edit Todo #{todo.id}
-      </label>
-      <TodoName
-        contentEditable="false"
-        onBlur={({ target }) => {
-          onBlurTodoName({ target, text: todo.text });
-        }}
-        onKeyDown={({ code, currentTarget }) => {
-          onKeyDownTodoName({
-            code,
-            currentTarget,
-            text: todo.text,
-          });
-        }}
-        defaultValue={todo.text}
-        disabled={todo.isDone}
-        id={`todo${todo.id}`}
-      />
-      <TodoActionsGroup>
-        <TodoMultiselectButton
-          onClick={onClickToggleMultiselect}
-          className={isSelected ? "selected" : ""}
-        >
-          {isSelected ? "Deselect" : "Select"}
-        </TodoMultiselectButton>
-        <TodoDeleteButton onClick={onClickDeleteItem}>Delete</TodoDeleteButton>
-      </TodoActionsGroup>
-    </TodoForm>
+        <TodoActionsGroup>
+          <TodoMultiselectButton
+            type="button"
+            onClick={onClickToggleMultiselect}
+            className={isSelected ? "selected" : ""}
+          >
+            {isSelected ? "Deselect" : "Select"}
+          </TodoMultiselectButton>
+          <TodoDeleteButton type="button" onClick={onClickDeleteItem}>
+            Delete
+          </TodoDeleteButton>
+        </TodoActionsGroup>
+      </TodoForm>
+    </TodoItem>
   );
 };

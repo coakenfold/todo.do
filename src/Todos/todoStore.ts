@@ -212,7 +212,7 @@ export const storeReducer = (state: iState, action: iStateAction) => {
           ...action.payload,
         },
       ].sort(sortOrder);
-
+      console.log({ ...state, lists });
       return { ...state, lists };
     }
 

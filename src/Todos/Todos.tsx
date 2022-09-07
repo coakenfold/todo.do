@@ -26,7 +26,7 @@ export const Todos = () => {
   const activeList = state.activeList as number;
   return (
     <TodoGroup>
-      <TodoTitle>Todo.Do</TodoTitle>
+      <TodoTitle>Todo Do</TodoTitle>
       <Main isMain={activeList === 0}>
         <TodoLists />
       </Main>
