@@ -2,7 +2,7 @@ import { useEffect, useRef, useContext } from "react";
 import { iStateTodo, storeActions } from "./todoStore";
 import { StateContext } from "./TodosProvider";
 import {
-  TodoGroup,
+  TodoForm,
   TodoName,
   TodoActionsGroup,
   TodoCheckboxGroup,
@@ -19,19 +19,19 @@ export const Todo = ({ todo, idList }: iTodoProps) => {
   const { state, dispatch } = useContext(StateContext);
 
   // Highlight on todo creation
-  const refTodoGroup = useRef<HTMLLIElement>(null);
+  const refTodoForm = useRef<HTMLLIElement>(null);
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
     // NOTE: `todo.id` is a timestamp
     const highlightUntil = todo.id + HIGHLIGHT_TIME;
-    if (refTodoGroup?.current && Date.now() < highlightUntil) {
+    if (refTodoForm?.current && Date.now() < highlightUntil) {
       const highlightTimeout = highlightUntil - Date.now();
 
-      refTodoGroup.current.classList.add("highlight");
+      refTodoForm.current.classList.add("highlight");
 
       timeoutId = setTimeout(() => {
-        if (refTodoGroup?.current) {
-          refTodoGroup.current.classList.remove("highlight");
+        if (refTodoForm?.current) {
+          refTodoForm.current.classList.remove("highlight");
         }
       }, highlightTimeout);
     }
@@ -41,7 +41,7 @@ export const Todo = ({ todo, idList }: iTodoProps) => {
         clearTimeout(timeoutId);
       }
     };
-  }, [refTodoGroup, todo.id]);
+  }, [refTodoForm, todo.id]);
 
   // Events
   const onChangeCompleteStatus = () => {
@@ -118,14 +118,19 @@ export const Todo = ({ todo, idList }: iTodoProps) => {
 
   const isSelected = state.multiselectTodos?.includes(todo.id);
   return (
-    <TodoGroup className={todo.isDone ? "done" : "undone"} ref={refTodoGroup}>
+    <TodoForm className={todo.isDone ? "done" : "undone"} ref={refTodoForm}>
+      <label htmlFor={`todo${todo.id}.isDone`} className="sr-only">
+        Finish Todo #{todo.id}
+      </label>
       <TodoCheckboxGroup>
         <input
           type="checkbox"
           onChange={onChangeCompleteStatus}
           checked={todo.isDone}
+          id={`todo${todo.id}.isDone`}
         />
       </TodoCheckboxGroup>
+      <label htmlFor={`todo${todo.id}`}>Edit Todo #{todo.id}</label>
       <TodoName
         contentEditable="false"
         onBlur={({ target }) => {
@@ -140,6 +145,7 @@ export const Todo = ({ todo, idList }: iTodoProps) => {
         }}
         defaultValue={todo.text}
         disabled={todo.isDone}
+        id={`todo${todo.id}`}
       />
       <TodoActionsGroup>
         <TodoMultiselectButton
@@ -150,6 +156,6 @@ export const Todo = ({ todo, idList }: iTodoProps) => {
         </TodoMultiselectButton>
         <TodoDeleteButton onClick={onClickDeleteItem}>Delete</TodoDeleteButton>
       </TodoActionsGroup>
-    </TodoGroup>
+    </TodoForm>
   );
 };

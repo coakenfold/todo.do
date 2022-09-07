@@ -98,7 +98,7 @@ export const TodoListMultiselectActionGroup = styled.div`
 // ======================================
 // Create todo
 // ----------------------------------
-export const TodoListNewTodoGroup = styled.form`
+export const TodoListNewTodoForm = styled.form`
   box-shadow: 0px 10px 40px 0px rgb(133 168 194 / 20%);
   border-radius: 1rem;
   display: flex;

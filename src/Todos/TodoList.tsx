@@ -7,7 +7,7 @@ import {
   TodoListHeaderHeading,
   TodoListHeaderTitle,
   TodoListTodosList,
-  TodoListNewTodoGroup,
+  TodoListNewTodoForm,
   TodoListNewTodoInput,
   TodoListNewTodoButton,
   TodoListMultiselectActionGroup,
@@ -90,25 +90,31 @@ export const TodoList = ({ idList }: { idList: number }) => {
         <TodoListHeaderTitle>{list.text}</TodoListHeaderTitle>
       </TodoListHeaderHeadingTitleGroup>
 
-      <TodoListNewTodoGroup>
-        <TodoListNewTodoInput
-          type="text"
-          placeholder="New todo item"
-          onChange={(event) => {
-            onChangeText(event.target.value);
-          }}
-          value={textTodo}
-        />
-        <TodoListNewTodoButton
-          onClick={(event) => {
-            event.preventDefault();
-            onClickAddItem();
-          }}
-          disabled={textTodo === ""}
-        >
-          {"Add Todo " + ((list.todos.length || 0) + 1)}
-        </TodoListNewTodoButton>
-      </TodoListNewTodoGroup>
+      <TodoListNewTodoForm>
+        <form>
+          <label htmlFor="newTodoItem" className="sr-only">
+            Create a Todo
+          </label>
+          <TodoListNewTodoInput
+            type="text"
+            placeholder="Create a Todo"
+            onChange={(event) => {
+              onChangeText(event.target.value);
+            }}
+            value={textTodo}
+            id="newTodoItem"
+          />
+          <TodoListNewTodoButton
+            onClick={(event) => {
+              event.preventDefault();
+              onClickAddItem();
+            }}
+            disabled={textTodo === ""}
+          >
+            {"Add Todo " + ((list.todos.length || 0) + 1)}
+          </TodoListNewTodoButton>
+        </form>
+      </TodoListNewTodoForm>
 
       <TodoListMultiselectActionGroup>
         <div>
