@@ -86,7 +86,7 @@ export const TodoList = ({ idList }: { idList: number }) => {
   return (
     <TodoListGroup>
       <TodoListHeaderHeadingTitleGroup>
-        <TodoListHeaderHeading>Todo List: To Dos</TodoListHeaderHeading>
+        <TodoListHeaderHeading>To Dos:</TodoListHeaderHeading>
         <TodoListHeaderTitle>{list.text}</TodoListHeaderTitle>
       </TodoListHeaderHeadingTitleGroup>
 
