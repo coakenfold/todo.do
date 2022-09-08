@@ -114,10 +114,10 @@ export const TodoLists = () => {
         }}
       >
         <label htmlFor="NewListInput" className="sr-only">
-          New Todo List name
+          New List Name
         </label>
         <TodoListsNewListInput
-          placeholder="New Todo List name"
+          placeholder="New List Name"
           type="text"
           onChange={(event) => {
             onChangeListText(event.target.value);
@@ -132,13 +132,13 @@ export const TodoLists = () => {
           }}
           disabled={textList === ""}
         >
-          Create new Todo List
+          Create <span className="sr-only">"{textList}" </span>List
         </TodoListsNewListButton>
       </TodoListsNewListForm>
       {state.lists.length > 0 ? (
         <TodoListsListGroup>
           <TodoListsHeaderGroup>
-            <TodoListsTitle>Todo Lists:</TodoListsTitle>
+            <TodoListsTitle>Lists:</TodoListsTitle>
 
             <TodoListsMultiselectActionGroup>
               {state.multiselectLists && state.multiselectLists.length > 1 ? (
@@ -148,8 +148,8 @@ export const TodoLists = () => {
                   }}
                 >
                   {state.multiselectLists.length > 1
-                    ? "Delete selected Todo Lists"
-                    : "Delete selected Todo List"}
+                    ? "Delete selected Lists"
+                    : "Delete selected List"}
                 </TodoListsMultiselectDeleteButton>
               ) : (
                 <></>
@@ -159,8 +159,8 @@ export const TodoLists = () => {
                   onClick={onClickToggleMultiselectAll}
                 >
                   {state.multiselectLists?.length === state.lists.length
-                    ? `Deselect all Todo Lists`
-                    : `Select all Todo Lists`}
+                    ? `Deselect all Lists`
+                    : `Select all Lists`}
                 </TodoListsMultiselectSelectAllButton>
               ) : (
                 <></>
@@ -185,11 +185,13 @@ export const TodoLists = () => {
                         }}
                         type="button"
                       >
-                        {id === state.activeList ? "Viewing" : "View"}
+                        {id === state.activeList ? "Viewing" : "View"}{" "}
+                        <span className="sr-only">"{text}" List</span>
                       </TodoListsListDetailsButton>
                     </TodoListsListActionsGroup>
+
                     <label htmlFor={`list${id}`} className="sr-only">
-                      Edit Todo List #{id}
+                      Edit "{text}" List Name
                     </label>
                     <TodoListsListName
                       contentEditable="false"
@@ -216,6 +218,7 @@ export const TodoLists = () => {
                         {state.multiselectLists?.includes(id)
                           ? "Deselect"
                           : "Select"}
+                        <span className="sr-only">"{text}" List</span>
                       </TodoListsListMultiselectButton>
                       <TodoListsListDeleteButton
                         onClick={() => {
@@ -223,7 +226,7 @@ export const TodoLists = () => {
                         }}
                         type="button"
                       >
-                        Delete
+                        Delete <span className="sr-only">"{text}" List</span>
                       </TodoListsListDeleteButton>
                     </TodoListsListActionsGroup>
                   </TodoListsListItemForm>

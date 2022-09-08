@@ -86,7 +86,7 @@ export const TodoList = ({ idList }: { idList: number }) => {
   return (
     <TodoListGroup>
       <TodoListHeaderHeadingTitleGroup>
-        <TodoListHeaderHeading>Todo List: Todos</TodoListHeaderHeading>
+        <TodoListHeaderHeading>Todo List: To Dos</TodoListHeaderHeading>
         <TodoListHeaderTitle>{list.text}</TodoListHeaderTitle>
       </TodoListHeaderHeadingTitleGroup>
 
@@ -96,10 +96,10 @@ export const TodoList = ({ idList }: { idList: number }) => {
         }}
       >
         <label htmlFor="newTodoItem" className="sr-only">
-          New Todo name
+          Add a To Do to "{list.text}" List
         </label>
         <TodoListNewTodoInput
-          placeholder="New Todo name"
+          placeholder="New To Do Name"
           type="text"
           onChange={(event) => {
             onChangeText(event.target.value);
@@ -111,7 +111,7 @@ export const TodoList = ({ idList }: { idList: number }) => {
           onClick={onClickAddItem}
           disabled={textTodo === ""}
         >
-          {"Create Todo " + ((list.todos.length || 0) + 1)}
+          Create <span className="sr-only">{textTodo} </span>To Do
         </TodoListNewTodoButton>
       </TodoListNewTodoForm>
 
@@ -124,8 +124,8 @@ export const TodoList = ({ idList }: { idList: number }) => {
               }}
             >
               {currentMultiselectTodos.length === list.todos.length
-                ? `Deselect all Todos`
-                : `Select all Todos`}
+                ? `Deselect all To Dos`
+                : `Select all To Dos`}
             </TodoListMultiselectSelectAllButton>
           ) : (
             <></>
@@ -140,16 +140,16 @@ export const TodoList = ({ idList }: { idList: number }) => {
                 }}
               >
                 {areAllTodosComplete
-                  ? "Mark selected Todos as not done"
-                  : "Mark selected Todos as done"}
+                  ? "Mark selected To Dos as not done"
+                  : "Mark selected To Dos as done"}
               </TodoListMultiselectMarkCompleteButton>
 
               <TodoListMultiselectDeleteButton
                 onClick={onClickToggleMultiselectDelete}
               >
                 {currentMultiselectTodos.length > 1
-                  ? "Delete selected Todos"
-                  : "Delete selected Todo"}
+                  ? "Delete selected To Dos"
+                  : "Delete selected To Do"}
               </TodoListMultiselectDeleteButton>
             </>
           ) : (

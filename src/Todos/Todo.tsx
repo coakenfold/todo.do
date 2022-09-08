@@ -128,7 +128,7 @@ export const Todo = ({ todo, idList }: iTodoProps) => {
         }}
       >
         <label htmlFor={`todo${todo.id}.isDone`} className="sr-only">
-          Finish Todo #{todo.id}
+          Finish "{todo.text}" To Do
         </label>
         <TodoCheckboxGroup>
           <input
@@ -139,7 +139,7 @@ export const Todo = ({ todo, idList }: iTodoProps) => {
           />
         </TodoCheckboxGroup>
         <label htmlFor={`todo${todo.id}`} className="sr-only">
-          Edit Todo #{todo.id}
+          Edit "{todo.text}" To Do Title
         </label>
         <TodoName
           contentEditable="false"
@@ -164,9 +164,10 @@ export const Todo = ({ todo, idList }: iTodoProps) => {
             className={isSelected ? "selected" : ""}
           >
             {isSelected ? "Deselect" : "Select"}
+            <span className="sr-only">"{todo.text}" To Do</span>
           </TodoMultiselectButton>
           <TodoDeleteButton type="button" onClick={onClickDeleteItem}>
-            Delete
+            Delete <span className="sr-only">"{todo.text}" To Do</span>
           </TodoDeleteButton>
         </TodoActionsGroup>
       </TodoForm>
